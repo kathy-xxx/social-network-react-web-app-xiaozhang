@@ -1,10 +1,11 @@
-import Table from "./Table";
+import { Container } from "react-bootstrap";
+import UserList from "./UserList";
 
 export default function Following() {
-    return (
-        <div id="wd-following">
-            <h3>Following</h3>
-            <Table />
-        </div>
-    );
+  return (
+    <Container className="my-4">
+      <h3>Following</h3>
+      <UserList />
+    </Container>
+  );
 }

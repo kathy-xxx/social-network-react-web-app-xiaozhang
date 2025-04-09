@@ -1,59 +1,92 @@
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  ListGroup,
+  ListGroupItem,
+  FormCheck,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Books from "../Books";
 import Reviews from "../Books/Reviews";
+
 export default function Profile() {
   return (
-    <div id="wd-profile">
-      <input type="checkbox" name="check-follow" id="wd-checkbox-follow" />
-      <label htmlFor="wd-checkbox-follow">Follow</label>
-      <div id="wd-profile-screen">
-        <h3>Profile</h3>
-        <input
-          defaultValue="alice"
-          placeholder="username"
-          className="wd-username"
-        />
-        <br />
-        <input
-          defaultValue="123"
-          placeholder="password"
-          type="password"
-          className="wd-password"
-        />
-        <br />
-        <input
-          defaultValue="Alice"
-          placeholder="First Name"
-          id="wd-firstname"
-        />
-        <br />
-        <input
-          defaultValue="Wonderland"
-          placeholder="Last Name"
-          id="wd-lastname"
-        />
-        <br />
-        <input defaultValue="alice@wonderland" type="email" id="wd-email" />
-        <br />
-        <select defaultValue="FACULTY" id="wd-role">
-          <option value="USER">User</option>
-          <option value="ADMIN">Admin</option>
-          <option value="FACULTY">Author</option>
-        </select>
-        <br />
-        <Link to="/following/1234">Following</Link>
-        <Link to="/followers/1234">Followers</Link>
-        <br />
-        <div id="wd-profile-favorite-books">
-          <h3>Favorite Books</h3>
-          <Books />
-        </div>
-        <div id="wd-profile-recent-reviews">
-          <h3>Recent Reviews</h3>
-          <Reviews />
-        </div>
-        <Link to="/login">Sign out</Link>
-      </div>
-    </div>
+    <Container id="wd-profile" className="my-4">
+      <Row>
+        {/* Left Column: User Basic Info */}
+        <Col xs={12} md={4} className="mb-4">
+          <Card>
+            <Card.Header as="h3">Profile</Card.Header>
+            <Card.Body>
+              <ListGroup variant="flush">
+                <ListGroupItem>
+                  <strong>Username:</strong> alice
+                </ListGroupItem>
+                <ListGroupItem>
+                  <strong>Bio:</strong> Hello World
+                </ListGroupItem>
+                <ListGroupItem>
+                  <strong>Password:</strong> ******
+                </ListGroupItem>
+                <ListGroupItem>
+                  <strong>First Name:</strong> Alice
+                </ListGroupItem>
+                <ListGroupItem>
+                  <strong>Last Name:</strong> Smith
+                </ListGroupItem>
+                <ListGroupItem>
+                  <strong>Email:</strong> alice@example.com
+                </ListGroupItem>
+                <ListGroupItem>
+                  <strong>Role:</strong> User
+                </ListGroupItem>
+              </ListGroup>
+              <div className="mt-3">
+                <FormCheck type="switch" label="Follow" />
+              </div>
+              <div className="mt-3 d-flex justify-content-between">
+                <Link to="/following/1234" className="btn btn-outline-primary">
+                  Following
+                </Link>
+                <Link to="/followers/1234" className="btn btn-outline-primary">
+                  Followers
+                </Link>
+              </div>
+              <div className="mt-3">
+                <Link to="/login" className="btn btn-danger w-100">
+                  Sign Out
+                </Link>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+
+        {/* Right Column: Favorite Books and Recent Reviews */}
+        <Col xs={12} md={8}>
+          <Row className="mb-4">
+            <Col>
+              <Card>
+                <Card.Header as="h4">Favorite Books</Card.Header>
+                <Card.Body>
+                  <Books />
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Card>
+                <Card.Header as="h4">Recent Reviews</Card.Header>
+                <Card.Body>
+                  <Reviews />
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+    </Container>
   );
 }
