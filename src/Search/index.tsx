@@ -1,7 +1,6 @@
-import { useParams } from "react-router";
-import Books from "../Books";
+import { Link, useParams } from "react-router";
 import * as db from "../Database";
-import { Container } from "react-bootstrap";
+import { Button, Card, Col, Container, Row } from "react-bootstrap";
 
 export default function Search() {
   const { gid } = useParams();
@@ -17,7 +16,35 @@ export default function Search() {
   return (
     <Container id="wd-search" className="my-4">
       <h1> Search Results </h1>
-      <Books books={filteredBooks} />
+      {/* Row configured to show 4 columns on medium and larger screens */}
+      <Row xs={1} md={4} className="g-4">
+        {filteredBooks.map((book) => (
+          <Col key={book._id}>
+            <Card className="h-100">
+              <Card.Img
+                variant="top"
+                src={book.cover_image_url}
+                alt={book.title}
+              />
+              <Card.Body>
+                <Card.Title>{book.title}</Card.Title>
+                <Card.Text>
+                  <p className="wd-book-summary">{book.summary}</p>
+                  <p>
+                    <strong>Average Rating:</strong> {book.average_rating}
+                  </p>
+                  <p>
+                    <strong>Publication Date:</strong> {book.publication_date}
+                  </p>
+                </Card.Text>
+                <Link to={`/details/${book._id}`}>
+                  <Button variant="primary">View</Button>
+                </Link>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+        </Row>
     </Container>
   );
 }
