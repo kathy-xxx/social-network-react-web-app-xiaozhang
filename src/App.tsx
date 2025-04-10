@@ -1,11 +1,11 @@
-import { BrowserRouter, Route, Routes } from "react-router";
+import { HashRouter, Route, Routes } from "react-router";
 import SocialNetwork from ".";
 import store from "./store";
 import { Provider } from "react-redux";
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Provider store={store}>
         <div>
           <Routes>
@@ -13,7 +13,7 @@ function App() {
           </Routes>
         </div>
       </Provider>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
