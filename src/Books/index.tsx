@@ -14,7 +14,7 @@ export default function Books({
   setBook: (book: any) => void;
   addNewBook: () => void;
   deleteBook: (book: any) => void;
-  updateBook: (book: any) => void;
+  updateBook: () => void;
 }) {
   return (
     <div id="wd-home-books" style={{ paddingTop: "20px" }}>
@@ -45,14 +45,20 @@ export default function Books({
             </Form.Group>
             <Button
               variant="primary"
-              onClick={addNewBook}
+              onClick={(e) => {
+                e.preventDefault();
+                addNewBook();
+              }}
               id="wd-add-book-click"
             >
               Add
             </Button>
             <Button
               variant="warning"
-              onClick={updateBook}
+              onClick={(e) => {
+                e.preventDefault();
+                updateBook();
+              }}
               id="wd-update-book-click"
             >
               Update
@@ -96,7 +102,10 @@ export default function Books({
                 </Button>
                 <Button
                   variant="danger"
-                  onClick={() => deleteBook(book._id)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    deleteBook(book._id);
+                  }}
                   id="wd-delete-book-click"
                 >
                   Delete

@@ -55,10 +55,22 @@ export default function Reviews({
                 }
               />
             </Form.Group>
-            <Button variant="primary" onClick={addNewReview}>
+            <Button
+              variant="primary"
+              onClick={(e) => {
+                e.preventDefault();
+                addNewReview();
+              }}
+            >
               Add
             </Button>
-            <Button variant="warning" onClick={updateReview}>
+            <Button
+              variant="warning"
+              onClick={(e) => {
+                e.preventDefault();
+                updateReview();
+              }}
+            >
               Update
             </Button>
           </Form>
@@ -87,14 +99,20 @@ export default function Reviews({
               <p className="wd-review-content">{review.content}</p>
               <Button
                 variant="warning"
-                onClick={() => setReview(review)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setReview(review);
+                }}
                 id="wd-edit-review-click"
               >
                 Edit
               </Button>
               <Button
                 variant="danger"
-                onClick={() => deleteReview(review._id)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  deleteReview(review._id);
+                }}
                 id="wd-delete-review-click"
               >
                 Delete

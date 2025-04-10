@@ -3,46 +3,28 @@ import { Link, useParams } from "react-router-dom";
 import Reviews from "../Reviews";
 import * as db from "../../Database";
 import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { addReview, deleteReivew, updateReview } from "../Reviews/reducer";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function Details() {
-  // Get the book ID from the URL
+  const dispatch = useDispatch();
+  const { reviews } = useSelector((state: any) => state.reviewsReducer);
   const { bid } = useParams<{ bid: string }>();
+  const { books } = useSelector((state: any) => state.booksReducer);
   // Use the new book data and find the specific book by its _id
-  const book = db.books.find((b) => b._id === bid);
+  const book = books.find((b: any) => b._id === bid);
   // Filter reviews for this specific book
-  const [reviews, setReviews] = useState<any[]>(
-    db.reviews.filter((r) => r.book_id === bid)
-  );
   const defaultReview = {
     _id: "0",
     rating: "5",
     title: "New Title",
     content: "New Content",
     review_date: "1900-01-01",
-    book_id: { bid },
+    book_id: bid,
     user_id: "123",
   };
   const [review, setReview] = useState<any>(defaultReview);
-  const addNewReview = () => {
-    const newReview = { ...review, _id: uuidv4() };
-    setReviews([...reviews, newReview]);
-  };
-  const deleteReview = (reviewId: string) => {
-    setReviews(reviews.filter((review) => review._id !== reviewId));
-  };
-  const updateReview = () => {
-    setReviews(
-      reviews.map((r) => {
-        if (r._id === review._id) {
-          return review;
-        } else {
-          return r;
-        }
-      })
-    );
-    setReview(defaultReview);
-  };
+
   // If no book is found, show a message
   if (!book) {
     return <div>Book not found</div>;
@@ -91,12 +73,18 @@ export default function Details() {
           <h2>Reviews</h2>
           {/* Pass the reviews for this book as a prop */}
           <Reviews
-            reviews={reviews}
+            reviews={reviews.filter((r: any) => r.book_id === bid)}
             review={review}
             setReview={setReview}
-            addNewReview={addNewReview}
-            deleteReview={deleteReview}
-            updateReview={updateReview}
+            addNewReview={() => {
+              dispatch(addReview(review));
+            }}
+            deleteReview={() => {
+              dispatch(deleteReivew(review._id));
+            }}
+            updateReview={() => {
+              dispatch(updateReview(review));
+            }}
           />
         </Col>
       </Row>
