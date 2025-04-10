@@ -1,8 +1,20 @@
-import { Navbar, Nav, Container, Form, FormControl, NavDropdown, FormSelect } from "react-bootstrap";
+import {
+  Navbar,
+  Nav,
+  Container,
+  Form,
+  FormControl,
+  NavDropdown,
+  FormSelect,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
+import * as db from "./Database";
+import { useState } from "react";
 
 export default function Navigation() {
+  const genres = db.genres;
+  const [gid, setGid] = useState("");
   return (
     <Navbar bg="light" expand="lg" id="wd-navigation">
       <Container>
@@ -22,11 +34,19 @@ export default function Navigation() {
           </Nav>
           {/* Search form in the center-right */}
           <Form className="d-flex me-3">
-            <FormSelect id="wd-select-genre" className="me-2">
-              <option value="ALL">All</option>
-              <option value="DRAMA">Drama</option>
-              <option value="SCIFI">Science Fiction</option>
-              <option value="FANTASY">Fantasy</option>
+            <FormSelect
+              id="wd-select-genre"
+              className="me-2"
+              value={gid}
+              onChange={(e) => setGid(e.target.value)}
+            >
+              {genres.map((genre) => {
+                return (
+                  <option key={genre._id} value={genre._id}>
+                    {genre.name}
+                  </option>
+                );
+              })}
             </FormSelect>
             <FormControl
               type="search"
@@ -34,8 +54,8 @@ export default function Navigation() {
               className="me-2"
               id="wd-search"
             />
-            <Nav.Link as={Link} to="/search">
-            <FaSearch />
+            <Nav.Link as={Link} to={`/search/${gid}`}>
+              <FaSearch />
             </Nav.Link>
           </Form>
           {/* Account dropdown on the right */}

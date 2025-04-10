@@ -47,7 +47,7 @@ export default function Profile() {
                   <strong>Bio:</strong> {user.bio}
                 </ListGroupItem>
                 <ListGroupItem>
-                  <strong>Password:</strong> ****** {/* Hidden */}
+                  <strong>Password:</strong> {user.password}
                 </ListGroupItem>
                 <ListGroupItem>
                   <strong>First Name:</strong> {user.firstName}
