@@ -6,10 +6,9 @@ import {
   ListGroup,
   ListGroupItem,
   FormCheck,
+  Button,
 } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
-import Books from "../Books";
-import Reviews from "../Books/Reviews";
 import * as db from "../Database";
 
 export default function Profile() {
@@ -95,12 +94,37 @@ export default function Profile() {
               <Card>
                 <Card.Header as="h4">Favorite Books</Card.Header>
                 <Card.Body>
-                  {favoriteBooks.length > 0 ? (
-                    // Reuse Books component and pass favoriteBooks as prop.
-                    <Books books={favoriteBooks as any[]} />
-                  ) : (
-                    <p>No favorite books.</p>
-                  )}
+                  {/* Row configured to show 4 columns on medium and larger screens */}
+                  <Row xs={1} md={4} className="g-4">
+                    {favoriteBooks.map((book) => (
+                      <Col key={book._id}>
+                        <Card className="h-100">
+                          <Card.Img
+                            variant="top"
+                            src={book.cover_image_url}
+                            alt={book.title}
+                          />
+                          <Card.Body>
+                            <Card.Title>{book.title}</Card.Title>
+                            <Card.Text>
+                              <p className="wd-book-summary">{book.summary}</p>
+                              <p>
+                                <strong>Average Rating:</strong>{" "}
+                                {book.average_rating}
+                              </p>
+                              <p>
+                                <strong>Publication Date:</strong>{" "}
+                                {book.publication_date}
+                              </p>
+                            </Card.Text>
+                            <Link to={`/details/${book._id}`}>
+                              <Button variant="primary">View</Button>
+                            </Link>
+                          </Card.Body>
+                        </Card>
+                      </Col>
+                    ))}
+                  </Row>
                 </Card.Body>
               </Card>
             </Col>
@@ -110,11 +134,14 @@ export default function Profile() {
               <Card>
                 <Card.Header as="h4">Recent Reviews</Card.Header>
                 <Card.Body>
-                  {userReviews.length > 0 ? (
-                    <Reviews reviews={userReviews as any[]} />
-                  ) : (
-                    <p>No recent reviews.</p>
-                  )}
+                  <ListGroup>
+                    {userReviews.map((review) => (
+                      <ListGroupItem key={review._id} className="mb-2">
+                        <h5>{review.title}</h5>
+                        <p className="wd-review-content">{review.content}</p>
+                      </ListGroupItem>
+                    ))}
+                  </ListGroup>
                 </Card.Body>
               </Card>
             </Col>

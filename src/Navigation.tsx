@@ -14,9 +14,10 @@ import { useState } from "react";
 
 export default function Navigation() {
   const genres = db.genres;
-  const [gid, setGid] = useState("");
+  const [gid, setGid] = useState(genres.length > 0 ? genres[0]._id : "");
+
   return (
-    <Navbar bg="light" expand="lg" id="wd-navigation">
+    <Navbar bg="light" sticky="top" expand="lg" id="wd-navigation">
       <Container>
         <Navbar.Brand as={Link} to="/home">
           Book Reviews Hub
@@ -40,13 +41,11 @@ export default function Navigation() {
               value={gid}
               onChange={(e) => setGid(e.target.value)}
             >
-              {genres.map((genre) => {
-                return (
-                  <option key={genre._id} value={genre._id}>
-                    {genre.name}
-                  </option>
-                );
-              })}
+              {genres.map((genre) => (
+                <option key={genre._id} value={genre._id}>
+                  {genre.name}
+                </option>
+              ))}
             </FormSelect>
             <FormControl
               type="search"

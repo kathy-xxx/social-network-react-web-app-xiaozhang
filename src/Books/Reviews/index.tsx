@@ -8,6 +8,7 @@ import {
   ListGroupItem,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import * as db from "../../Database";
 
 export default function Reviews({ reviews }: { reviews: any[] }) {
   return (
@@ -36,17 +37,24 @@ export default function Reviews({ reviews }: { reviews: any[] }) {
 
       {/* Existing Reviews */}
       <ListGroup>
-        {reviews.map((review) => (
-          <ListGroupItem key={review._id} className="mb-2">
-            <h5>{review.title}</h5>
-            <p className="mb-1">
-              <Link to={`/profile/${review.user_id}`} className="wd-reviewer">
-                Reviewer: {review.user_id}
-              </Link>
-            </p>
-            <p className="wd-review-content">{review.content}</p>
-          </ListGroupItem>
-        ))}
+        {reviews.map((review) => {
+          const reviewer = db.users.find((user) => user._id === review.user_id);
+          const reviewerName = reviewer
+            ? `${reviewer.firstName} ${reviewer.lastName}`
+            : "Unknown Reviewer";
+          return (
+            <ListGroupItem key={review._id} className="mb-2">
+              <h5>{review.title}</h5>
+              <p className="mb-1">
+                <Link to={`/profile/${review.user_id}`} className="wd-reviewer">
+                  {reviewerName}
+                </Link>
+              </p>
+              <p className="wd-review-content"><strong>Rating: </strong>{review.rating}</p>
+              <p className="wd-review-content">{review.content}</p>
+            </ListGroupItem>
+          );
+        })}
       </ListGroup>
     </div>
   );

@@ -6,12 +6,22 @@ import * as db from "../../Database";
 export default function Details() {
   // Get the book ID from the URL
   const { bid } = useParams<{ bid: string }>();
-
   // Use the new book data and find the specific book by its _id
   const book = db.books.find((b) => b._id === bid);
-
   // Filter reviews for this specific book
   const reviews = db.reviews.filter((r) => r.book_id === bid);
+
+  // If no book is found, show a message
+  if (!book) {
+    return <div>Book not found</div>;
+  }
+
+  // Find the author for the book using db.users by matching author_id
+  const author = db.users.find((u) => u._id === book.author_id);
+  // Construct the full name of the author; fallback to "Unknown Author" if not found
+  const authorName = author
+    ? `${author.firstName} ${author.lastName}`
+    : "Unknown Author";
 
   if (!book) {
     return <div>Book not found</div>;
@@ -23,11 +33,7 @@ export default function Details() {
       <Row className="mb-4">
         {/* Left Column: Book Cover */}
         <Col md={4}>
-          <Image
-            src={book.cover_image_url}
-            alt={book.title}
-            fluid
-          />
+          <Image src={book.cover_image_url} alt={book.title} fluid />
         </Col>
         {/* Right Column: Book Info */}
         <Col md={8}>
@@ -35,7 +41,7 @@ export default function Details() {
           <p>{book.summary}</p>
           <p>
             <Link to={`/profile/${book.author_id}`} className="wd-book-author">
-              <strong>by Book Author</strong>
+              <strong>{authorName}</strong>
             </Link>
           </p>
           <p>
