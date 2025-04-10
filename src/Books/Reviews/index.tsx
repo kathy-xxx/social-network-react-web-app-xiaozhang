@@ -9,7 +9,7 @@ import {
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-export default function Reviews() {
+export default function Reviews({ reviews }: { reviews: any[] }) {
   return (
     <div id="wd-reviews">
       {/* New Review Form */}
@@ -36,30 +36,17 @@ export default function Reviews() {
 
       {/* Existing Reviews */}
       <ListGroup>
-        <ListGroupItem className="mb-2">
-          <h5>Review1 Title</h5>
-          <p className="mb-1">
-            <Link to="/profile/123" className="wd-reviewer">
-              Reviewer: John Doe
-            </Link>
-          </p>
-          <p className="wd-review-content">
-            Review1 Content: Lorem ipsum dolor sit amet, consectetur adipiscing
-            elit.
-          </p>
-        </ListGroupItem>
-        <ListGroupItem className="mb-2">
-          <h5>Review2 Title</h5>
-          <p className="mb-1">
-            <Link to="/profile/456" className="wd-reviewer">
-              Reviewer: Jane Smith
-            </Link>
-          </p>
-          <p className="wd-review-content">
-            Review2 Content: Sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua.
-          </p>
-        </ListGroupItem>
+        {reviews.map((review) => (
+          <ListGroupItem key={review._id} className="mb-2">
+            <h5>{review.title}</h5>
+            <p className="mb-1">
+              <Link to={`/profile/${review.user_id}`} className="wd-reviewer">
+                Reviewer: {review.user_id}
+              </Link>
+            </p>
+            <p className="wd-review-content">{review.content}</p>
+          </ListGroupItem>
+        ))}
       </ListGroup>
     </div>
   );

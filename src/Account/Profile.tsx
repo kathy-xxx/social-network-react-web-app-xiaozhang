@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Container,
   Row,
@@ -7,11 +8,30 @@ import {
   ListGroupItem,
   FormCheck,
 } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Books from "../Books";
 import Reviews from "../Books/Reviews";
+import * as db from "../Database";
 
 export default function Profile() {
+  const { uid } = useParams<{ uid: string }>();
+  const user = db.users.find((u) => u._id === uid);
+
+  if (!user) {
+    return <div>User not found.</div>;
+  }
+
+  // Retrieve favorite book relationships for this user and map to books
+  const favorites = db.favoritebooks.filter((fav) => fav.user_id === uid);
+  const favoriteBooks = favorites
+    .map((fav) => db.books.find((book) => book._id === fav.book_id))
+    .filter((book) => book !== undefined);
+
+  // Filter reviews written by this user from the reviews database.
+  const userReviews: any[] = db.reviews.filter(
+    (review) => review.user_id === uid
+  );
+
   return (
     <Container id="wd-profile" className="my-4">
       <Row>
@@ -22,35 +42,41 @@ export default function Profile() {
             <Card.Body>
               <ListGroup variant="flush">
                 <ListGroupItem>
-                  <strong>Username:</strong> alice
+                  <strong>Username:</strong> {user.username}
                 </ListGroupItem>
                 <ListGroupItem>
-                  <strong>Bio:</strong> Hello World
+                  <strong>Bio:</strong> {user.bio}
                 </ListGroupItem>
                 <ListGroupItem>
-                  <strong>Password:</strong> ******
+                  <strong>Password:</strong> ****** {/* Hidden */}
                 </ListGroupItem>
                 <ListGroupItem>
-                  <strong>First Name:</strong> Alice
+                  <strong>First Name:</strong> {user.firstName}
                 </ListGroupItem>
                 <ListGroupItem>
-                  <strong>Last Name:</strong> Smith
+                  <strong>Last Name:</strong> {user.lastName}
                 </ListGroupItem>
                 <ListGroupItem>
-                  <strong>Email:</strong> alice@example.com
+                  <strong>Email:</strong> {user.email}
                 </ListGroupItem>
                 <ListGroupItem>
-                  <strong>Role:</strong> User
+                  <strong>Role:</strong> {user.role}
                 </ListGroupItem>
               </ListGroup>
               <div className="mt-3">
                 <FormCheck type="switch" label="Follow" />
               </div>
               <div className="mt-3 d-flex justify-content-between">
-                <Link to="/following/1234" className="btn btn-outline-primary">
+                <Link
+                  to={`/following/${user._id}`}
+                  className="btn btn-outline-primary"
+                >
                   Following
                 </Link>
-                <Link to="/followers/1234" className="btn btn-outline-primary">
+                <Link
+                  to={`/followers/${user._id}`}
+                  className="btn btn-outline-primary"
+                >
                   Followers
                 </Link>
               </div>
@@ -70,7 +96,12 @@ export default function Profile() {
               <Card>
                 <Card.Header as="h4">Favorite Books</Card.Header>
                 <Card.Body>
-                  <Books />
+                  {favoriteBooks.length > 0 ? (
+                    // Reuse Books component and pass favoriteBooks as prop.
+                    <Books books={favoriteBooks as any[]} />
+                  ) : (
+                    <p>No favorite books.</p>
+                  )}
                 </Card.Body>
               </Card>
             </Col>
@@ -80,7 +111,11 @@ export default function Profile() {
               <Card>
                 <Card.Header as="h4">Recent Reviews</Card.Header>
                 <Card.Body>
-                  <Reviews />
+                  {userReviews.length > 0 ? (
+                    <Reviews reviews={userReviews as any[]} />
+                  ) : (
+                    <p>No recent reviews.</p>
+                  )}
                 </Card.Body>
               </Card>
             </Col>

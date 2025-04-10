@@ -22,8 +22,8 @@ export default function SocialNetwork() {
         <Route path="/login" element={<Signin />} />
         <Route path="/register" element={<Signup />} />
         <Route path="/details/:bid" element={<Details />} />
-        <Route path="/following/1234" element={<Following />} />
-        <Route path="/followers/1234" element={<Follower />} />
+        <Route path="/following/:uid" element={<Following />} />
+        <Route path="/followers/:uid" element={<Follower />} />
       </Routes>
     </div>
   );

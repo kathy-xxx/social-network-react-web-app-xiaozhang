@@ -1,8 +1,22 @@
 import { Container, Row, Col, Image, FormCheck } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Reviews from "../Reviews";
+import * as db from "../../Database";
 
 export default function Details() {
+  // Get the book ID from the URL
+  const { bid } = useParams<{ bid: string }>();
+
+  // Use the new book data and find the specific book by its _id
+  const book = db.books.find((b) => b._id === bid);
+
+  // Filter reviews for this specific book
+  const reviews = db.reviews.filter((r) => r.book_id === bid);
+
+  if (!book) {
+    return <div>Book not found</div>;
+  }
+
   return (
     <Container id="wd-book-detail" className="my-4">
       {/* Book details header */}
@@ -10,22 +24,25 @@ export default function Details() {
         {/* Left Column: Book Cover */}
         <Col md={4}>
           <Image
-            src="https://via.placeholder.com/300x400"
-            alt="Book Cover"
+            src={book.cover_image_url}
+            alt={book.title}
             fluid
           />
         </Col>
         {/* Right Column: Book Info */}
         <Col md={8}>
-          <h1>Book Title</h1>
+          <h1>{book.title}</h1>
+          <p>{book.summary}</p>
           <p>
-            Book Summary: Lorem ipsum dolor sit amet, consectetur adipiscing
-            elit. Vivamus lacinia odio vitae vestibulum vestibulum.
-          </p>
-          <p>
-            <Link to="/profile/123" className="wd-book-author">
+            <Link to={`/profile/${book.author_id}`} className="wd-book-author">
               <strong>by Book Author</strong>
             </Link>
+          </p>
+          <p>
+            <strong>Average Rating:</strong> {book.average_rating}
+          </p>
+          <p>
+            <strong>Publication Date:</strong> {book.publication_date}
           </p>
           <FormCheck type="switch" label="Favorite" />
         </Col>
@@ -34,7 +51,8 @@ export default function Details() {
       <Row>
         <Col>
           <h2>Reviews</h2>
-          <Reviews />
+          {/* Pass the reviews for this book as a prop */}
+          <Reviews reviews={reviews} />
         </Col>
       </Row>
     </Container>
