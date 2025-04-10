@@ -7,11 +7,11 @@ export default function Search() {
   const books = db.books;
   const bookstogenres = db.bookstogenres;
 
-  const mappings = bookstogenres.filter((mapping) => mapping.genre_id === gid);
+  const mappings = bookstogenres.filter((mapping: any) => mapping.genre_id === gid);
 
-  const validBookIds = mappings.map((mapping) => mapping.book_id);
+  const validBookIds = mappings.map((mapping: any) => mapping.book_id);
 
-  const filteredBooks = books.filter((book) => validBookIds.includes(book._id));
+  const filteredBooks = books.filter((book: any) => validBookIds.includes(book._id));
 
   return (
     <Container id="wd-search" className="my-4">

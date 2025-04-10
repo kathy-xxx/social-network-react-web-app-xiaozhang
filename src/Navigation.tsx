@@ -41,7 +41,7 @@ export default function Navigation() {
               value={gid}
               onChange={(e) => setGid(e.target.value)}
             >
-              {genres.map((genre) => (
+              {genres.map((genre: any) => (
                 <option key={genre._id} value={genre._id}>
                   {genre.name}
                 </option>
