@@ -5,7 +5,6 @@ import {
   Card,
   ListGroup,
   ListGroupItem,
-  FormCheck,
   Button,
   Form,
 } from "react-bootstrap";
@@ -14,6 +13,7 @@ import * as db from "../Database";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { updateUser } from "./Users/reducer";
+import { addFollow, deleteFollow } from "./Follows/reducer";
 import { setCurrentUser } from "../Account/reducer";
 
 export default function Profile() {
@@ -23,6 +23,7 @@ export default function Profile() {
   const [profile, setProfile] = useState<any>({});
   const { reviews } = useSelector((state: any) => state.reviewsReducer);
   const { users } = useSelector((state: any) => state.usersReducer);
+  const { follows } = useSelector((state: any) => state.followsReducer);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const fetchProfile = () => {
     setProfile(user);
@@ -30,8 +31,8 @@ export default function Profile() {
   useEffect(() => {
     fetchProfile();
   }, []);
-  const isSelf = uid ? false : true;
   const effectiveUid = uid ? uid : currentUser?._id;
+  const isSelf = !uid || (currentUser && currentUser._id === effectiveUid);
   if (!effectiveUid) {
     return <div>User not found.</div>;
   }
@@ -39,6 +40,13 @@ export default function Profile() {
   if (!user) {
     return <div>User not found.</div>;
   }
+  const isFollowing = () => {
+    if (!currentUser) return false;
+    return follows.some(
+      (f: any) =>
+        f.followee_id === effectiveUid && f.follower_id === currentUser._id
+    );
+  };
   const favorites = db.favoritebooks.filter(
     (fav) => fav.user_id === effectiveUid
   );
@@ -51,6 +59,24 @@ export default function Profile() {
   const signout = () => {
     dispatch(setCurrentUser(null));
     navigate("/home");
+  };
+  const follow = () => {
+    if (!currentUser) return;
+    dispatch(
+      addFollow({ followee_id: effectiveUid, follower_id: currentUser._id })
+    );
+  };
+  const followObj = currentUser
+    ? follows.find(
+        (f: any) =>
+          f.followee_id === effectiveUid && f.follower_id === currentUser._id
+      )
+    : null;
+  const followId = followObj ? followObj._id : null;
+  const unfollow = () => {
+    if (followId) {
+      dispatch(deleteFollow(followId));
+    }
   };
 
   return (
@@ -176,7 +202,14 @@ export default function Profile() {
                   </ListGroupItem>
                 </ListGroup>
                 <div className="mt-3">
-                  <FormCheck type="switch" label="Follow" />
+                  {currentUser &&
+                    (isFollowing() ? (
+                      <Button variant="danger" onClick={unfollow}>
+                        Unfollow
+                      </Button>
+                    ) : (
+                      <Button onClick={follow}>Follow</Button>
+                    ))}
                 </div>
                 <div className="mt-3 d-flex justify-content-between">
                   <Link
