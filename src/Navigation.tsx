@@ -9,14 +9,12 @@ import {
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
-import * as db from "./Database";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "./Account/reducer";
 
 export default function Navigation() {
-  const genres = db.genres;
-  // Use the first genre's _id as default if available.
+  const { genres } = useSelector((state: any) => state.genresReducer);
   const [gid, setGid] = useState(genres.length > 0 ? genres[0]._id : "");
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();

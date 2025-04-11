@@ -86,9 +86,6 @@ export default function Books({
                   <p>
                     <strong>Average Rating:</strong> {book.average_rating}
                   </p>
-                  <p>
-                    <strong>Publication Date:</strong> {book.publication_date}
-                  </p>
                 </Card.Text>
                 <Link to={`/details/${book._id}`}>
                   <Button variant="primary">View</Button>

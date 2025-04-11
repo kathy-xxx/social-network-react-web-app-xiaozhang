@@ -8,7 +8,7 @@ import {
   ListGroupItem,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import * as db from "../../Database";
+import { useSelector } from "react-redux";
 
 export default function Reviews({
   reviews,
@@ -25,6 +25,7 @@ export default function Reviews({
   deleteReview: (review: any) => void;
   updateReview: () => void;
 }) {
+  const { users } = useSelector((state: any) => state.usersReducer);
   return (
     <div id="wd-reviews">
       {/* New Review Form */}
@@ -80,7 +81,7 @@ export default function Reviews({
       {/* Existing Reviews */}
       <ListGroup>
         {reviews.map((review) => {
-          const reviewer = db.users.find((user) => user._id === review.user_id);
+          const reviewer = users.find((user: any) => user._id === review.user_id);
           const reviewerName = reviewer
             ? `${reviewer.firstName} ${reviewer.lastName}`
             : "Unknown Reviewer";

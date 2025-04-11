@@ -9,7 +9,6 @@ import {
   Form,
 } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import * as db from "../Database";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { updateUser } from "./Users/reducer";
@@ -21,9 +20,11 @@ export default function Profile() {
   const navigate = useNavigate();
   const { uid } = useParams<{ uid?: string }>();
   const [profile, setProfile] = useState<any>({});
+  const { books } = useSelector((state: any) => state.booksReducer);
   const { reviews } = useSelector((state: any) => state.reviewsReducer);
   const { users } = useSelector((state: any) => state.usersReducer);
   const { follows } = useSelector((state: any) => state.followsReducer);
+  const { favorites } = useSelector((state: any) => state.favoritesReducer);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const fetchProfile = () => {
     setProfile(user);
@@ -47,12 +48,12 @@ export default function Profile() {
         f.followee_id === effectiveUid && f.follower_id === currentUser._id
     );
   };
-  const favorites = db.favoritebooks.filter(
-    (fav) => fav.user_id === effectiveUid
+  const userFavorites = favorites.filter(
+    (fav: any) => fav.user_id === effectiveUid
   );
-  const favoriteBooks = favorites
-    .map((fav) => db.books.find((book) => book._id === fav.book_id))
-    .filter((book) => book !== undefined);
+  const favoriteBooks = books.filter((book: any) =>
+    userFavorites.map((fav: any) => fav.book_id).includes(book._id)
+  );
   const userReviews: any[] = reviews.filter(
     (review: any) => review.user_id === effectiveUid
   );
@@ -254,10 +255,6 @@ export default function Profile() {
                               <p>
                                 <strong>Average Rating:</strong>{" "}
                                 {book.average_rating}
-                              </p>
-                              <p>
-                                <strong>Publication Date:</strong>{" "}
-                                {book.publication_date}
                               </p>
                             </Card.Text>
                             <Link to={`/details/${book._id}`}>

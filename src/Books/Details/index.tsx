@@ -1,16 +1,16 @@
 import { Container, Row, Col, Image, FormCheck } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import Reviews from "../Reviews";
-import * as db from "../../Database";
 import { useState } from "react";
 import { addReview, deleteReivew, updateReview } from "../Reviews/reducer";
 import { useSelector, useDispatch } from "react-redux";
 
 export default function Details() {
   const dispatch = useDispatch();
-  const { reviews } = useSelector((state: any) => state.reviewsReducer);
   const { bid } = useParams<{ bid: string }>();
+  const { reviews } = useSelector((state: any) => state.reviewsReducer);
   const { books } = useSelector((state: any) => state.booksReducer);
+  const { users } = useSelector((state: any) => state.usersReducer);
   // Use the new book data and find the specific book by its _id
   const book = books.find((b: any) => b._id === bid);
   // Filter reviews for this specific book
@@ -31,7 +31,7 @@ export default function Details() {
   }
 
   // Find the author for the book using db.users by matching author_id
-  const author = db.users.find((u) => u._id === book.author_id);
+  const author = users.find((u: any) => u._id === book.author_id);
   // Construct the full name of the author; fallback to "Unknown Author" if not found
   const authorName = author
     ? `${author.firstName} ${author.lastName}`
