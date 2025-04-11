@@ -240,7 +240,7 @@ export default function Profile() {
                 <Card.Body>
                   {/* Row configured to show 4 columns on medium and larger screens */}
                   <Row xs={1} md={4} className="g-4">
-                    {favoriteBooks.map((book) => (
+                    {favoriteBooks.map((book: any) => (
                       <Col key={book._id}>
                         <Card className="h-100">
                           <Card.Img
