@@ -18,13 +18,9 @@ export default function Navigation() {
   const genres = db.genres;
   // Use the first genre's _id as default if available.
   const [gid, setGid] = useState(genres.length > 0 ? genres[0]._id : "");
-
-  // Get currentUser from Redux (from accountReducer)
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  // Define the signout function to clear current user and redirect to home.
   const signout = () => {
     dispatch(setCurrentUser(null));
     navigate("/home");

@@ -7,90 +7,194 @@ import {
   ListGroupItem,
   FormCheck,
   Button,
+  Form,
 } from "react-bootstrap";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import * as db from "../Database";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { updateUser } from "./Users/reducer";
+import { setCurrentUser } from "../Account/reducer";
 
 export default function Profile() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { uid } = useParams<{ uid?: string }>();
+  const [profile, setProfile] = useState<any>({});
+  const { reviews } = useSelector((state: any) => state.reviewsReducer);
+  const { users } = useSelector((state: any) => state.usersReducer);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const fetchProfile = () => {
+    setProfile(user);
+  };
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+  const isSelf = uid ? false : true;
   const effectiveUid = uid ? uid : currentUser?._id;
   if (!effectiveUid) {
     return <div>User not found.</div>;
   }
-  const user = db.users.find((u) => u._id === effectiveUid);
-
+  const user = users.find((u) => u._id === effectiveUid);
   if (!user) {
     return <div>User not found.</div>;
   }
-
-  // Retrieve favorite book relationships for this user and map to books
-  const favorites = db.favoritebooks.filter((fav) => fav.user_id === effectiveUid);
+  const favorites = db.favoritebooks.filter(
+    (fav) => fav.user_id === effectiveUid
+  );
   const favoriteBooks = favorites
     .map((fav) => db.books.find((book) => book._id === fav.book_id))
     .filter((book) => book !== undefined);
-
-  // Filter reviews written by this user from the reviews database.
-  const userReviews: any[] = db.reviews.filter(
-    (review) => review.user_id === effectiveUid
+  const userReviews: any[] = reviews.filter(
+    (review: any) => review.user_id === effectiveUid
   );
+  const signout = () => {
+    dispatch(setCurrentUser(null));
+    navigate("/home");
+  };
 
   return (
     <Container id="wd-profile" className="my-4">
       <Row>
         {/* Left Column: User Basic Info */}
         <Col xs={12} md={4} className="mb-4">
-          <Card>
-            <Card.Header as="h3">Profile</Card.Header>
-            <Card.Body>
-              <ListGroup variant="flush">
-                <ListGroupItem>
-                  <strong>Username:</strong> {user.username}
-                </ListGroupItem>
-                <ListGroupItem>
-                  <strong>Bio:</strong> {user.bio}
-                </ListGroupItem>
-                <ListGroupItem>
-                  <strong>Password:</strong> {user.password}
-                </ListGroupItem>
-                <ListGroupItem>
-                  <strong>First Name:</strong> {user.firstName}
-                </ListGroupItem>
-                <ListGroupItem>
-                  <strong>Last Name:</strong> {user.lastName}
-                </ListGroupItem>
-                <ListGroupItem>
-                  <strong>Email:</strong> {user.email}
-                </ListGroupItem>
-                <ListGroupItem>
-                  <strong>Role:</strong> {user.role}
-                </ListGroupItem>
-              </ListGroup>
-              <div className="mt-3">
-                <FormCheck type="switch" label="Follow" />
-              </div>
-              <div className="mt-3 d-flex justify-content-between">
-                <Link
-                  to={`/following/${user._id}`}
-                  className="btn btn-outline-primary"
-                >
-                  Following
-                </Link>
-                <Link
-                  to={`/followers/${user._id}`}
-                  className="btn btn-outline-primary"
-                >
-                  Followers
-                </Link>
-              </div>
-              <div className="mt-3">
-                <Link to="/home" className="btn btn-danger w-100">
-                  Sign Out
-                </Link>
-              </div>
-            </Card.Body>
-          </Card>
+          {isSelf && (
+            <Card>
+              <Card.Header as="h3">Profile</Card.Header>
+              <Card.Body>
+                <Form>
+                  <Form.Label>Username</Form.Label>
+                  <Form.Control
+                    defaultValue={profile.username}
+                    id="wd-username"
+                    onChange={(e) =>
+                      setProfile({ ...profile, username: e.target.value })
+                    }
+                  />
+                  <Form.Label>Bio</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    defaultValue={profile.bio}
+                    id="wd-bio"
+                    onChange={(e) =>
+                      setProfile({ ...profile, bio: e.target.value })
+                    }
+                  />
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    defaultValue={profile.password}
+                    id="wd-password"
+                    onChange={(e) =>
+                      setProfile({ ...profile, password: e.target.value })
+                    }
+                  />
+                  <Form.Label>First Name</Form.Label>
+                  <Form.Control
+                    defaultValue={profile.firstName}
+                    id="wd-first-name"
+                    onChange={(e) =>
+                      setProfile({ ...profile, firstName: e.target.value })
+                    }
+                  />
+                  <Form.Label>Last Name</Form.Label>
+                  <Form.Control
+                    defaultValue={profile.lastName}
+                    id="wd-last-name"
+                    onChange={(e) =>
+                      setProfile({ ...profile, lastName: e.target.value })
+                    }
+                  />
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    defaultValue={profile.email}
+                    id="wd-email"
+                    onChange={(e) =>
+                      setProfile({ ...profile, email: e.target.value })
+                    }
+                  />
+                </Form>
+                <div className="mt-3 d-flex justify-content-between">
+                  <Link
+                    to={`/following/${user._id}`}
+                    className="btn btn-outline-primary"
+                  >
+                    Following
+                  </Link>
+                  <Link
+                    to={`/followers/${user._id}`}
+                    className="btn btn-outline-primary"
+                  >
+                    Followers
+                  </Link>
+                </div>
+                <div className="mt-3 justify-content-between">
+                  <Button
+                    className="w-100"
+                    onClick={() => dispatch(updateUser(profile))}
+                  >
+                    Save
+                  </Button>
+                </div>
+                <div className="mt-3 justify-content-between">
+                  <Link
+                    to="/home"
+                    className="btn btn-danger w-100"
+                    onClick={signout}
+                  >
+                    Sign Out
+                  </Link>
+                </div>
+              </Card.Body>
+            </Card>
+          )}
+          {!isSelf && (
+            <Card>
+              <Card.Header as="h3">Profile</Card.Header>
+              <Card.Body>
+                <ListGroup variant="flush">
+                  <ListGroupItem>
+                    <strong>Username:</strong> {user.username}
+                  </ListGroupItem>
+                  <ListGroupItem>
+                    <strong>Bio:</strong> {user.bio}
+                  </ListGroupItem>
+                  <ListGroupItem>
+                    <strong>Password:</strong> {user.password}
+                  </ListGroupItem>
+                  <ListGroupItem>
+                    <strong>First Name:</strong> {user.firstName}
+                  </ListGroupItem>
+                  <ListGroupItem>
+                    <strong>Last Name:</strong> {user.lastName}
+                  </ListGroupItem>
+                  <ListGroupItem>
+                    <strong>Email:</strong> {user.email}
+                  </ListGroupItem>
+                  <ListGroupItem>
+                    <strong>Role:</strong> {user.role}
+                  </ListGroupItem>
+                </ListGroup>
+                <div className="mt-3">
+                  <FormCheck type="switch" label="Follow" />
+                </div>
+                <div className="mt-3 d-flex justify-content-between">
+                  <Link
+                    to={`/following/${user._id}`}
+                    className="btn btn-outline-primary"
+                  >
+                    Following
+                  </Link>
+                  <Link
+                    to={`/followers/${user._id}`}
+                    className="btn btn-outline-primary"
+                  >
+                    Followers
+                  </Link>
+                </div>
+              </Card.Body>
+            </Card>
+          )}
         </Col>
 
         {/* Right Column: Favorite Books and Recent Reviews */}
