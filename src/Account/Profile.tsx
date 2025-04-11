@@ -10,24 +10,30 @@ import {
 } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import * as db from "../Database";
+import { useSelector } from "react-redux";
 
 export default function Profile() {
-  const { uid } = useParams<{ uid: string }>();
-  const user = db.users.find((u) => u._id === uid);
+  const { uid } = useParams<{ uid?: string }>();
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const effectiveUid = uid ? uid : currentUser?._id;
+  if (!effectiveUid) {
+    return <div>User not found.</div>;
+  }
+  const user = db.users.find((u) => u._id === effectiveUid);
 
   if (!user) {
     return <div>User not found.</div>;
   }
 
   // Retrieve favorite book relationships for this user and map to books
-  const favorites = db.favoritebooks.filter((fav) => fav.user_id === uid);
+  const favorites = db.favoritebooks.filter((fav) => fav.user_id === effectiveUid);
   const favoriteBooks = favorites
     .map((fav) => db.books.find((book) => book._id === fav.book_id))
     .filter((book) => book !== undefined);
 
   // Filter reviews written by this user from the reviews database.
   const userReviews: any[] = db.reviews.filter(
-    (review) => review.user_id === uid
+    (review) => review.user_id === effectiveUid
   );
 
   return (
@@ -79,7 +85,7 @@ export default function Profile() {
                 </Link>
               </div>
               <div className="mt-3">
-                <Link to="/login" className="btn btn-danger w-100">
+                <Link to="/home" className="btn btn-danger w-100">
                   Sign Out
                 </Link>
               </div>
