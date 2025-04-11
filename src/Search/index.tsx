@@ -1,5 +1,4 @@
 import { Link, useParams } from "react-router";
-import * as db from "../Database";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
