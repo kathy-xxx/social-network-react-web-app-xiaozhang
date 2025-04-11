@@ -35,7 +35,7 @@ export default function Profile() {
   if (!effectiveUid) {
     return <div>User not found.</div>;
   }
-  const user = users.find((u) => u._id === effectiveUid);
+  const user = users.find((u: any) => u._id === effectiveUid);
   if (!user) {
     return <div>User not found.</div>;
   }
