@@ -187,19 +187,10 @@ export default function Profile() {
                     <strong>Bio:</strong> {user.bio}
                   </ListGroupItem>
                   <ListGroupItem>
-                    <strong>Password:</strong> {user.password}
-                  </ListGroupItem>
-                  <ListGroupItem>
                     <strong>First Name:</strong> {user.firstName}
                   </ListGroupItem>
                   <ListGroupItem>
                     <strong>Last Name:</strong> {user.lastName}
-                  </ListGroupItem>
-                  <ListGroupItem>
-                    <strong>Email:</strong> {user.email}
-                  </ListGroupItem>
-                  <ListGroupItem>
-                    <strong>Role:</strong> {user.role}
                   </ListGroupItem>
                 </ListGroup>
                 <div className="mt-3">

@@ -7,7 +7,7 @@
       "publication_date": "1936-06-30",
       "cover_image_url": "https://m.media-amazon.com/images/I/718gkx8l6pL._SY522_.jpg",
       "average_rating": "4.3",
-      "reviews_locked": false,
+      "reviews_locked": "false",
       "author_id": "133"
     },
     {
@@ -18,7 +18,7 @@
       "publication_date": "1949-06-08",
       "cover_image_url": "https://m.media-amazon.com/images/I/41L+OrmfZML._SY445_SX342_.jpg",
       "average_rating": "4.7",
-      "reviews_locked": false,
+      "reviews_locked": "false",
       "author_id": "129"
     },
     {
@@ -29,7 +29,7 @@
       "publication_date": "1925-04-10",
       "cover_image_url": "https://m.media-amazon.com/images/I/41k428xb0aL._SY445_SX342_.jpg",
       "average_rating": "4.2",
-      "reviews_locked": false,
+      "reviews_locked": "false",
       "author_id": "130"
     },
     {
@@ -40,7 +40,7 @@
       "publication_date": "1960-07-11",
       "cover_image_url": "https://m.media-amazon.com/images/I/51IXWZzlgSL._SY445_SX342_.jpg",
       "average_rating": "4.8",
-      "reviews_locked": false,
+      "reviews_locked": "false",
       "author_id": "131"
     },
     {
@@ -51,7 +51,7 @@
       "publication_date": "1813-01-28",
       "cover_image_url": "https://m.media-amazon.com/images/I/31p-Oes1xxS._SY445_SX342_.jpg",
       "average_rating": "4.5",
-      "reviews_locked": false,
+      "reviews_locked": "false",
       "author_id": "132"
     }
   ]
