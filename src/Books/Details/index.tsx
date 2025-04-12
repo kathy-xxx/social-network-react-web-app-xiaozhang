@@ -25,7 +25,7 @@ export default function Details() {
     content: "New Content",
     review_date: "1900-01-01",
     book_id: bid,
-    user_id: currentUser._id,
+    user_id: currentUser ? currentUser._id : "123",
   };
   const [review, setReview] = useState<any>(defaultReview);
   // If no book is found, show a message
@@ -47,11 +47,11 @@ export default function Details() {
   };
   const reviewsLocked = () => book.reviews_locked === "true";
   const lockReviews = () => {
-    if (!isAuthor) return;
+    if (!isAuthor) return false;
     dispatch(updateBook({ ...book, reviews_locked: "true" }));
   };
   const unlockReviews = () => {
-    if (!isAuthor) return;
+    if (!isAuthor) return false;
     dispatch(updateBook({ ...book, reviews_locked: "false" }));
   };
   const isFavorite = () => {
@@ -61,7 +61,7 @@ export default function Details() {
     );
   };
   const favorite = () => {
-    if (!currentUser) return;
+    if (!currentUser) return false;
     dispatch(addFavorite({ book_id: bid, user_id: currentUser._id }));
   };
   const favoriteObj = currentUser

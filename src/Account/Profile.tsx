@@ -26,18 +26,18 @@ export default function Profile() {
   const { follows } = useSelector((state: any) => state.followsReducer);
   const { favorites } = useSelector((state: any) => state.favoritesReducer);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const effectiveUid = uid ? uid : currentUser?._id;
+  const isSelf = !uid || (currentUser && currentUser._id === effectiveUid);
+  const user = users.find((u: any) => u._id === effectiveUid);
   const fetchProfile = () => {
     setProfile(user);
   };
   useEffect(() => {
     fetchProfile();
   }, []);
-  const effectiveUid = uid ? uid : currentUser?._id;
-  const isSelf = !uid || (currentUser && currentUser._id === effectiveUid);
   if (!effectiveUid) {
     return <div>User not found.</div>;
   }
-  const user = users.find((u: any) => u._id === effectiveUid);
   if (!user) {
     return <div>User not found.</div>;
   }
@@ -62,7 +62,7 @@ export default function Profile() {
     navigate("/home");
   };
   const follow = () => {
-    if (!currentUser) return;
+    if (!currentUser) return false;
     dispatch(
       addFollow({ followee_id: effectiveUid, follower_id: currentUser._id })
     );
