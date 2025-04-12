@@ -19,14 +19,7 @@ export default function Signup() {
     role: "USER",
   };
   const [user, setUser] = useState<any>(defaultUser);
-  const [verifyPassword, setVerifyPassword] = useState("");
-  const [error, setError] = useState<string>("");
   const signup = () => {
-    setError("");
-    if (user.password !== verifyPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
     dispatch(addUser(user));
     dispatch(setCurrentUser(user));
     navigate("/home");
@@ -59,11 +52,7 @@ export default function Signup() {
             </Form.Group>
             <Form.Group className="mb-3" controlId="signupVerifyPassword">
               <Form.Label>Verify Password</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Confirm password"
-                onChange={(e) => setVerifyPassword(e.target.value)}
-              />
+              <Form.Control type="password" placeholder="Confirm password" />
             </Form.Group>
             <Button
               variant="primary"
