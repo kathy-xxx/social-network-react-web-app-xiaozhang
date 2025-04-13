@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 export default function Home() {
   const dispatch = useDispatch();
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const defaultBook = {
     _id: "0",
     title: "New Book",
@@ -16,7 +17,7 @@ export default function Home() {
       "https://m.media-amazon.com/images/I/51WUPDKFMBL._SX342_SY445_.jpg",
     average_rating: "5.0",
     reviews_locked: false,
-    author_id: "120",
+    author_id: currentUser ? currentUser._id : "123",
   };
   const { books } = useSelector((state: any) => state.booksReducer);
   const [book, setBook] = useState<any>(defaultBook);
@@ -32,8 +33,8 @@ export default function Home() {
           addNewBook={() => {
             dispatch(addBook(book));
           }}
-          deleteBook={() => {
-            dispatch(deleteBook(book._id));
+          deleteBook={(bookId: string) => {
+            dispatch(deleteBook(bookId));
           }}
           updateBook={() => {
             dispatch(updateBook(book));

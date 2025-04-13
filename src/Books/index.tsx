@@ -14,12 +14,13 @@ export default function Books({
   book: any;
   setBook: (book: any) => void;
   addNewBook: () => void;
-  deleteBook: (book: any) => void;
+  deleteBook: (bookId: string) => void;
   updateBook: () => void;
 }) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const isAdmin = () => currentUser.role === "ADMIN";
   const isAuthor = () => currentUser.role === "AUTHOR";
+  const isBookAuthor = (book: any) => book.author_id === currentUser._id;
   return (
     <div id="wd-home-books" style={{ paddingTop: "20px" }}>
       <h1>Book Reviews Hub</h1>
@@ -98,7 +99,7 @@ export default function Books({
                 <Link to={`/details/${book._id}`}>
                   <Button variant="primary">View</Button>
                 </Link>
-                {currentUser && isAdmin() && (
+                {currentUser && (isAdmin() || isBookAuthor(book)) && (
                   <>
                     <Button
                       variant="warning"
@@ -109,10 +110,7 @@ export default function Books({
                     </Button>
                     <Button
                       variant="danger"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        deleteBook(book._id);
-                      }}
+                      onClick={() => deleteBook(book._id)}
                       id="wd-delete-book-click"
                     >
                       Delete

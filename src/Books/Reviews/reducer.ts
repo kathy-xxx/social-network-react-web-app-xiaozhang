@@ -20,7 +20,7 @@ const reviewsSlice = createSlice({
       };
       state.reviews = [...state.reviews, newReview] as any;
     },
-    deleteReivew: (state, { payload: reviewId }) => {
+    deleteReview: (state, { payload: reviewId }) => {
       state.reviews = state.reviews.filter((r: any) => r._id !== reviewId);
     },
     updateReview: (state, { payload: review }) => {
@@ -30,5 +30,5 @@ const reviewsSlice = createSlice({
     },
   },
 });
-export const { addReview, deleteReivew, updateReview } = reviewsSlice.actions;
+export const { addReview, deleteReview, updateReview } = reviewsSlice.actions;
 export default reviewsSlice.reducer;

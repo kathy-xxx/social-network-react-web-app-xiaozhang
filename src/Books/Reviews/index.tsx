@@ -22,13 +22,13 @@ export default function Reviews({
   review: any;
   setReview: (review: any) => void;
   addNewReview: () => void;
-  deleteReview: (review: any) => void;
+  deleteReview: (reviewId: string) => void;
   updateReview: () => void;
 }) {
   const { users } = useSelector((state: any) => state.usersReducer);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const isAdmin = () => currentUser.role === "ADMIN";
-  const isWriter = (review: any) => review.user_id === currentUser._id;
+  const isReviewWriter = (review: any) => review.user_id === currentUser._id;
   return (
     <div id="wd-reviews">
       {/* New Review Form */}
@@ -115,7 +115,7 @@ export default function Reviews({
                 {review.rating}
               </p>
               <p className="wd-review-content">{review.content}</p>
-              {currentUser && (isAdmin() || isWriter(review)) && (
+              {currentUser && (isAdmin() || isReviewWriter(review)) && (
                 <>
                   <Button
                     variant="warning"

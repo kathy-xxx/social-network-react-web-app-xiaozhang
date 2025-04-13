@@ -2,7 +2,7 @@ import { Container, Row, Col, Image, Button } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import Reviews from "../Reviews";
 import { useState } from "react";
-import { addReview, deleteReivew, updateReview } from "../Reviews/reducer";
+import { addReview, deleteReview, updateReview } from "../Reviews/reducer";
 import { useSelector, useDispatch } from "react-redux";
 import { addFavorite, deleteFavorite } from "../../Account/Favorites/reducer";
 import { updateBook } from "../reducer";
@@ -132,8 +132,8 @@ export default function Details() {
               addNewReview={() => {
                 dispatch(addReview(review));
               }}
-              deleteReview={() => {
-                dispatch(deleteReivew(review._id));
+              deleteReview={(reviewId: string) => {
+                dispatch(deleteReview(reviewId));
               }}
               updateReview={() => {
                 dispatch(updateReview(review));

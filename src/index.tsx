@@ -8,6 +8,7 @@ import Search from "./Search";
 import Details from "./Books/Details";
 import Following from "./Account/Follows/Following";
 import Follower from "./Account/Follows/Follower";
+import ProtectedRoute from "./Account/ProtectedRoutes";
 
 export default function SocialNetwork() {
   return (
@@ -18,7 +19,14 @@ export default function SocialNetwork() {
         <Route path="/home" element={<Home />} />
         <Route path="/search" element={<Search />} />
         <Route path="/search/:gid/:name?" element={<Search />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/profile/:uid" element={<Profile />} />
         <Route path="/login" element={<Signin />} />
         <Route path="/register" element={<Signup />} />
