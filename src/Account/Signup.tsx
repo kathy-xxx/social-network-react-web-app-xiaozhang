@@ -54,6 +54,31 @@ export default function Signup() {
               <Form.Label>Verify Password</Form.Label>
               <Form.Control type="password" placeholder="Confirm password" />
             </Form.Group>
+            <Form.Group className="mb-3" controlId="signupRole">
+              <Form.Label>Sign Up As</Form.Label>
+              <div>
+                <Form.Check
+                  inline
+                  type="radio"
+                  label="Reader"
+                  name="role"
+                  id="readerRadio"
+                  value="USER"
+                  checked={user.role === "USER"}
+                  onChange={(e) => setUser({ ...user, role: e.target.value })}
+                />
+                <Form.Check
+                  inline
+                  type="radio"
+                  label="Author"
+                  name="role"
+                  id="authorRadio"
+                  value="AUTHOR"
+                  checked={user.role === "AUTHOR"}
+                  onChange={(e) => setUser({ ...user, role: e.target.value })}
+                />
+              </div>
+            </Form.Group>
             <Button
               variant="primary"
               type="submit"

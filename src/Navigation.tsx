@@ -15,10 +15,14 @@ import { setCurrentUser } from "./Account/reducer";
 
 export default function Navigation() {
   const { genres } = useSelector((state: any) => state.genresReducer);
+  // Set gid to the first genre if available, otherwise an empty string.
   const [gid, setGid] = useState(genres.length > 0 ? genres[0]._id : "");
+  // New state variable to capture the search by book name
+  const [searchName, setSearchName] = useState("");
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const signout = () => {
     dispatch(setCurrentUser(null));
     navigate("/home");
@@ -37,7 +41,6 @@ export default function Navigation() {
             <Nav.Link as={Link} to="/home">
               Home
             </Nav.Link>
-            {/* Display Profile link only when user is logged in */}
             {currentUser && (
               <Nav.Link as={Link} to="/profile">
                 Profile
@@ -52,6 +55,9 @@ export default function Navigation() {
               value={gid}
               onChange={(e) => setGid(e.target.value)}
             >
+              <option key="all" value="all">
+                All
+              </option>
               {genres.map((genre: any) => (
                 <option key={genre._id} value={genre._id}>
                   {genre.name}
@@ -60,11 +66,21 @@ export default function Navigation() {
             </FormSelect>
             <FormControl
               type="search"
-              placeholder="Search"
+              placeholder="Search by book name"
               className="me-2"
               id="wd-search"
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
             />
-            <Nav.Link as={Link} to={`/search/${gid}`}>
+            {/* Modify the route to include the searchName parameter */}
+            <Nav.Link
+              as={Link}
+              to={
+                searchName.trim() === ""
+                  ? `/search/${gid}` // No search name passed
+                  : `/search/${gid}/${searchName}`
+              }
+            >
               <FaSearch />
             </Nav.Link>
           </Form>
@@ -72,10 +88,8 @@ export default function Navigation() {
           <Nav>
             <NavDropdown title="Account" id="account-dropdown">
               {currentUser ? (
-                // If logged in, show "Sign Out" which triggers signout function
                 <NavDropdown.Item onClick={signout}>Sign Out</NavDropdown.Item>
               ) : (
-                // Otherwise, show "Sign In" and "Sign Up"
                 <>
                   <NavDropdown.Item as={Link} to="/login">
                     Sign In

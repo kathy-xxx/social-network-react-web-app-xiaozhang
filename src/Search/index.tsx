@@ -3,23 +3,38 @@ import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
 export default function Search() {
-  const { gid } = useParams();
+  // Extract both genre id and search name parameters
+  const { gid, name } = useParams();
   const { books } = useSelector((state: any) => state.booksReducer);
   const { bookstogenres } = useSelector(
     (state: any) => state.bookstogenresReducer
   );
-  const mappings = bookstogenres.filter(
-    (mapping: any) => mapping.genre_id === gid
-  );
-  const validBookIds = mappings.map((mapping: any) => mapping.book_id);
-  const filteredBooks = books.filter((book: any) =>
-    validBookIds.includes(book._id)
-  );
+
+  let filteredBooks = [];
+  if (gid === "all") {
+    // If "All" genre is selected, start with all books
+    filteredBooks = books;
+  } else {
+    // Filter books based on the selected genre
+    const mappings = bookstogenres.filter(
+      (mapping: any) => mapping.genre_id === gid
+    );
+    const validBookIds = mappings.map((mapping: any) => mapping.book_id);
+    filteredBooks = books.filter((book: any) =>
+      validBookIds.includes(book._id)
+    );
+  }
+
+  // If a search name is provided, filter the books by title
+  if (name && name.trim() !== "") {
+    filteredBooks = filteredBooks.filter((book: any) =>
+      book.title.toLowerCase().includes(name.toLowerCase())
+    );
+  }
 
   return (
     <Container id="wd-search" className="my-4">
-      <h1> Search Results </h1>
-      {/* Row configured to show 4 columns on medium and larger screens */}
+      <h1>Search Results</h1>
       <Row xs={1} md={4} className="g-4">
         {filteredBooks.map((book: any) => (
           <Col key={book._id}>

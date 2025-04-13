@@ -243,10 +243,6 @@ export default function Profile() {
                             <Card.Title>{book.title}</Card.Title>
                             <Card.Text>
                               <p className="wd-book-summary">{book.summary}</p>
-                              <p>
-                                <strong>Average Rating:</strong>{" "}
-                                {book.average_rating}
-                              </p>
                             </Card.Text>
                             <Link to={`/details/${book._id}`}>
                               <Button variant="primary">View</Button>

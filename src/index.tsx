@@ -17,7 +17,7 @@ export default function SocialNetwork() {
         <Route path="/" element={<Navigate to="home" />} />
         <Route path="/home" element={<Home />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/search/:gid" element={<Search />} />
+        <Route path="/search/:gid/:name?" element={<Search />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/:uid" element={<Profile />} />
         <Route path="/login" element={<Signin />} />
