@@ -10,12 +10,24 @@ import {
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "./Account/reducer";
+import * as genreClient from "./Search/Genres/client";
 
 export default function Navigation() {
-  const { genres } = useSelector((state: any) => state.genresReducer);
+  const [genres, setGenres] = useState<any[]>([]);
+  const fetchGenres = async () => {
+    try {
+      const genres = await genreClient.fetchAllGenres();
+      setGenres(genres);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchGenres();
+  }, []);
   // Set gid to the first genre if available, otherwise an empty string.
   const [gid, setGid] = useState(genres.length > 0 ? genres[0]._id : "");
   // New state variable to capture the search by book name

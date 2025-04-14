@@ -1,17 +1,24 @@
 import { Container } from "react-bootstrap";
 import UserList from "../Users/UserList";
-import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import * as userClient from "../client";
 
 export default function Following() {
   const { uid } = useParams<{ uid: string }>();
-  const { users } = useSelector((state: any) => state.usersReducer);
-  const { follows } = useSelector((state: any) => state.followsReducer);
-  const followeeIDs = follows
-    .filter((follow: any) => follow.follower_id === uid)
-    .map((follow: any) => follow.followee_id);
-
-  const followees = users.filter((user: any) => followeeIDs.includes(user._id));
+  const [followees, setFollowees] = useState<any[]>([]);
+    const fetchFollowees = async () => {
+      if (!uid) return;
+      try {
+        const followees = await userClient.findFolloweesForUser(uid);
+        setFollowees(followees);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    useEffect(() => {
+      fetchFollowees();
+    }, [uid]);
 
   return (
     <Container className="my-4">

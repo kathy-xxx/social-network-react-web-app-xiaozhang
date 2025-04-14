@@ -1,12 +1,10 @@
-import * as bookClient from "../Books/client";
 import { Container } from "react-bootstrap";
 import Books from "../Books";
 import { useEffect, useState } from "react";
-import { addBook, deleteBook, updateBook } from "../Books/reducer";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import * as bookClient from "../Books/client";
 
 export default function Home() {
-  const dispatch = useDispatch();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const defaultBook = {
     _id: "0",
@@ -38,8 +36,21 @@ export default function Home() {
     setBooks([...books, newBook]);
   };
   const deleteBook = async (bookId: string) => {
-    const status = await bookClient.deleteBook(bookId);
+    await bookClient.deleteBook(bookId);
     setBooks(books.filter((book: any) => book._id !== bookId));
+  };
+  const updateBook = async () => {
+    await bookClient.updateBook(book);
+    setBooks(
+      books.map((b) => {
+        if (b._id === book._id) {
+          return book;
+        } else {
+          return b;
+        }
+      })
+    );
+    setBook(defaultBook);
   };
 
   return (
@@ -56,9 +67,7 @@ export default function Home() {
           deleteBook={(bookId: string) => {
             deleteBook(bookId);
           }}
-          updateBook={() => {
-            dispatch(updateBook(book));
-          }}
+          updateBook={updateBook}
         />
       </div>
     </Container>

@@ -1,4 +1,3 @@
-import * as client from "./client";
 import {
   Container,
   Row,
@@ -12,18 +11,17 @@ import {
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { addFollow, deleteFollow } from "./Follows/reducer";
 import { setCurrentUser } from "../Account/reducer";
+import * as client from "./client";
+import * as bookClient from "../Books/client";
+import * as reviewClient from "../Books/Reviews/client";
+import * as followClient from "./Follows/client";
 
 export default function Profile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { uid } = useParams<{ uid?: string }>();
   const [profile, setProfile] = useState<any>({});
-  const { books } = useSelector((state: any) => state.booksReducer);
-  const { reviews } = useSelector((state: any) => state.reviewsReducer);
-  const { follows } = useSelector((state: any) => state.followsReducer);
-  const { favorites } = useSelector((state: any) => state.favoritesReducer);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const effectiveUid = uid ? uid : currentUser?._id;
   const isSelf = !uid || (currentUser && currentUser._id === effectiveUid);
@@ -39,6 +37,44 @@ export default function Profile() {
   useEffect(() => {
     fetchProfile();
   }, []);
+  const [follows, setFollows] = useState<any[]>([]);
+  const fetchFollows = async () => {
+    try {
+      const follows = await followClient.fetchAllFollows();
+      setFollows(follows);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchFollows();
+  }, []);
+  const [favoriteBooks, setFavoriteBooks] = useState<any[]>([]);
+  const fetchFavoriteBooks = async () => {
+    if (!profile) return;
+    try {
+      const books = await bookClient.findFavoriteBooksForUser(profile._id);
+      setFavoriteBooks(books);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchFavoriteBooks();
+  }, [profile]);
+  const [userReviews, setUserReviews] = useState<any[]>([]);
+  const fetchUserReviews = async () => {
+    if (!profile) return;
+    try {
+      const reviews = await reviewClient.findReviewsForUser(profile._id);
+      setUserReviews(reviews);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchUserReviews();
+  }, [profile]);
   if (!effectiveUid) {
     return <div>User not found.</div>;
   }
@@ -49,37 +85,21 @@ export default function Profile() {
         f.followee_id === effectiveUid && f.follower_id === currentUser._id
     );
   };
-  const userFavorites = favorites.filter(
-    (fav: any) => fav.user_id === effectiveUid
-  );
-  const favoriteBooks = books.filter((book: any) =>
-    userFavorites.map((fav: any) => fav.book_id).includes(book._id)
-  );
-  const userReviews: any[] = reviews.filter(
-    (review: any) => review.user_id === effectiveUid
-  );
   const signout = async () => {
     await client.signout();
     dispatch(setCurrentUser(null));
     navigate("/home");
   };
-  const follow = () => {
+  const follow = async () => {
     if (!currentUser) return false;
-    dispatch(
-      addFollow({ followee_id: effectiveUid, follower_id: currentUser._id })
-    );
+    const newFollow = await client.follow(effectiveUid);
+    setFollows([...follows, newFollow]);
   };
-  const followObj = currentUser
-    ? follows.find(
-        (f: any) =>
-          f.followee_id === effectiveUid && f.follower_id === currentUser._id
-      )
-    : null;
-  const followId = followObj ? followObj._id : null;
-  const unfollow = () => {
-    if (followId) {
-      dispatch(deleteFollow(followId));
-    }
+  const unfollow = async () => {
+    await client.unfollow(effectiveUid);
+    setFollows(
+      follows.filter((follow: any) => follow.followee_id !== effectiveUid)
+    );
   };
   const updateProfile = async () => {
     const updatedProfile = await client.updateUser(profile);

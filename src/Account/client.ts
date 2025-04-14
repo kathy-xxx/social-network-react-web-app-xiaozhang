@@ -31,5 +31,33 @@ export const findUserById = async (userId: string) => {
     const response = await axiosWithCredentials.get(`${USERS_API}/${userId}`);
     return response.data;
 };
+export const findFavorites = async () => {
+    const response = await axiosWithCredentials.get(`${USERS_API}/favorites`);
+    return response.data;
+}
+export const favorite = async (bookId: string) => {
+    const response = await axiosWithCredentials.post(`${USERS_API}/favorite/${bookId}`);
+    return response.data;
+}
+export const unfavorite = async (bookId: string) => {
+    const response = await axiosWithCredentials.delete(`${USERS_API}/favorite/${bookId}`);
+    return response.data;
+}
+export const follow = async (followeeId: string) => {
+    const response = await axiosWithCredentials.post(`${USERS_API}/follow/${followeeId}`);
+    return response.data;
+}
+export const unfollow = async (followeeId: string) => {
+    const response = await axiosWithCredentials.delete(`${USERS_API}/follow/${followeeId}`);
+    return response.data;
+}
+export const findFollowersForUser = async (userId: string) => {
+    const response = await axiosWithCredentials.get(`${USERS_API}/${userId}/followers`);
+    return response.data;
+}
+export const findFolloweesForUser = async (userId: string) => {
+    const response = await axiosWithCredentials.get(`${USERS_API}/${userId}/followees`);
+    return response.data;
+}
   
   

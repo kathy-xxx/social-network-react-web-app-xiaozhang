@@ -1,23 +1,43 @@
 import { Container, Row, Col, Image, Button } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import Reviews from "../Reviews";
-import { useState } from "react";
-import { addReview, deleteReview, updateReview } from "../Reviews/reducer";
-import { useSelector, useDispatch } from "react-redux";
-import { addFavorite, deleteFavorite } from "../../Account/Favorites/reducer";
-import { updateBook } from "../reducer";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import * as reviewClient from "../Reviews/client";
+import * as bookClient from "../client";
+import * as userClient from "../../Account/client";
+import * as favoriteClient from "../../Account/Favorites/client";
 
 export default function Details() {
-  const dispatch = useDispatch();
   const { bid } = useParams<{ bid: string }>();
-  const { reviews } = useSelector((state: any) => state.reviewsReducer);
-  const { books } = useSelector((state: any) => state.booksReducer);
-  const { users } = useSelector((state: any) => state.usersReducer);
-  const { favorites } = useSelector((state: any) => state.favoritesReducer);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   // Use the new book data and find the specific book by its _id
-  const book = books.find((b: any) => b._id === bid);
-  // Filter reviews for this specific book
+  const [book, setBook] = useState<any>();
+  const fetchBook = async () => {
+    if (!bid) return;
+    try {
+      const book = await bookClient.findBookById(bid);
+      setBook(book);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchBook();
+  }, []);
+  const [favorites, setFavorites] = useState<any[]>([]);
+  const fetchFavorites = async () => {
+    try {
+      const favorites = await favoriteClient.fetchAllFavorites();
+      setFavorites(favorites);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchFavorites();
+  }, []);
+  const [reviews, setReviews] = useState<any[]>([]);
   const defaultReview = {
     _id: "0",
     rating: "5",
@@ -28,12 +48,54 @@ export default function Details() {
     user_id: currentUser ? currentUser._id : "123",
   };
   const [review, setReview] = useState<any>(defaultReview);
-  // If no book is found, show a message
-  if (!book) {
-    return <div>Book not found</div>;
-  }
-  // Find the author for the book using db.users by matching author_id
-  const author = users.find((u: any) => u._id === book.author_id);
+  const fetchReviews = async () => {
+    try {
+      const reviews = await reviewClient.findReviewsForBook(book._id);
+      setReviews(reviews);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    if (book) {
+      fetchReviews();
+    }
+  }, [book]);
+  const addReview = async () => {
+    const newReview = await reviewClient.createReview(review);
+    setReviews([...reviews, newReview]);
+  };
+  const deleteReview = async (reviewId: string) => {
+    await reviewClient.deleteReview(reviewId);
+    setReviews(reviews.filter((review: any) => review._id !== reviewId));
+  };
+  const updateReview = async () => {
+    await reviewClient.updateReview(review);
+    setReviews(
+      reviews.map((r) => {
+        if (r._id === review._id) {
+          return review;
+        } else {
+          return r;
+        }
+      })
+    );
+    setReview(defaultReview);
+  };
+  const [author, setAuthor] = useState<any>();
+  const fetchAuthor = async () => {
+    try {
+      const author = await bookClient.findAuthorForBook(book._id);
+      setAuthor(author);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    if (book) {
+      fetchAuthor();
+    }
+  }, [book]);
   // Construct the full name of the author; fallback to "Unknown Author" if not found
   const authorName = author
     ? `${author.firstName} ${author.lastName}`
@@ -46,13 +108,15 @@ export default function Details() {
     return currentUser.role === "AUTHOR" && book.author_id === currentUser._id;
   };
   const reviewsLocked = () => book.reviews_locked === "true";
-  const lockReviews = () => {
+  const lockReviews = async () => {
     if (!isAuthor) return false;
-    dispatch(updateBook({ ...book, reviews_locked: "true" }));
+    await bookClient.updateBook({ ...book, reviews_locked: "true" });
+    fetchBook();
   };
-  const unlockReviews = () => {
+  const unlockReviews = async () => {
     if (!isAuthor) return false;
-    dispatch(updateBook({ ...book, reviews_locked: "false" }));
+    await bookClient.updateBook({ ...book, reviews_locked: "false" });
+    fetchBook();
   };
   const isFavorite = () => {
     if (!currentUser) return false;
@@ -60,20 +124,16 @@ export default function Details() {
       (f: any) => f.book_id === bid && f.user_id === currentUser._id
     );
   };
-  const favorite = () => {
+  const favorite = async () => {
     if (!currentUser) return false;
-    dispatch(addFavorite({ book_id: bid, user_id: currentUser._id }));
+    const newFavorite = await userClient.favorite(book._id);
+    setFavorites([...favorites, newFavorite]);
   };
-  const favoriteObj = currentUser
-    ? favorites.find(
-        (f: any) => f.book_id === bid && f.user_id === currentUser._id
-      )
-    : null;
-  const favoriteId = favoriteObj ? favoriteObj._id : null;
-  const unfavorite = () => {
-    if (favoriteId) {
-      dispatch(deleteFavorite(favoriteId));
-    }
+  const unfavorite = async () => {
+    await userClient.unfavorite(book._id);
+    setFavorites(
+      favorites.filter((favorite: any) => favorite.book_id !== book._id)
+    );
   };
 
   return (
@@ -114,7 +174,9 @@ export default function Details() {
               (reviewsLocked() ? (
                 <Button onClick={unlockReviews}>Unlock Reviews</Button>
               ) : (
-                <Button onClick={lockReviews}>Lock Reviews</Button>
+                <Button variant="danger" onClick={lockReviews}>
+                  Lock Reviews
+                </Button>
               ))}
           </div>
         </Col>
@@ -126,18 +188,14 @@ export default function Details() {
           {/* Pass the reviews for this book as a prop */}
           {!reviewsLocked() && (
             <Reviews
-              reviews={reviews.filter((r: any) => r.book_id === bid)}
+              reviews={reviews}
               review={review}
               setReview={setReview}
-              addNewReview={() => {
-                dispatch(addReview(review));
-              }}
+              addNewReview={addReview}
               deleteReview={(reviewId: string) => {
-                dispatch(deleteReview(reviewId));
+                deleteReview(reviewId);
               }}
-              updateReview={() => {
-                dispatch(updateReview(review));
-              }}
+              updateReview={updateReview}
             />
           )}
           {reviewsLocked() && <p>Reviews locked by author.</p>}

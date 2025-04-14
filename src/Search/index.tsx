@@ -1,36 +1,34 @@
 import { Link, useParams } from "react-router";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import * as bookClient from "../Books/client";
 
 export default function Search() {
   // Extract both genre id and search name parameters
   const { gid, name } = useParams();
-  const { books } = useSelector((state: any) => state.booksReducer);
-  const { bookstogenres } = useSelector(
-    (state: any) => state.bookstogenresReducer
-  );
-
-  let filteredBooks = [];
-  if (gid === "all") {
-    // If "All" genre is selected, start with all books
-    filteredBooks = books;
-  } else {
-    // Filter books based on the selected genre
-    const mappings = bookstogenres.filter(
-      (mapping: any) => mapping.genre_id === gid
-    );
-    const validBookIds = mappings.map((mapping: any) => mapping.book_id);
-    filteredBooks = books.filter((book: any) =>
-      validBookIds.includes(book._id)
-    );
-  }
-
-  // If a search name is provided, filter the books by title
-  if (name && name.trim() !== "") {
-    filteredBooks = filteredBooks.filter((book: any) =>
-      book.title.toLowerCase().includes(name.toLowerCase())
-    );
-  }
+  const [filteredBooks, setFilteredBooks] = useState<any[]>([]);
+  const fetchFilteredBooks = async () => {
+    try {
+      if (!gid) return;
+      let books = [];
+      if (gid === "all") {
+        books = await bookClient.fetchAllBooks();
+      } else {
+        books = await bookClient.findBooksByGenre(gid);
+      }
+      if (name && name.trim() !== "") {
+        books = books.filter((book: any) =>
+          book.title.toLowerCase().includes(name.toLowerCase())
+        );
+      }
+      setFilteredBooks(books);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchFilteredBooks();
+  }, [gid, name]);
 
   return (
     <Container id="wd-search" className="my-4">
