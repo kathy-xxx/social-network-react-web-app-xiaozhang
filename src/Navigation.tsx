@@ -80,7 +80,7 @@ export default function Navigation() {
             </FormSelect>
             <FormControl
               type="search"
-              placeholder="Search by book name"
+              placeholder="Search by name"
               className="me-2"
               id="wd-search"
               value={searchName}
