@@ -1,6 +1,7 @@
+import * as bookClient from "../Books/client";
 import { Container } from "react-bootstrap";
 import Books from "../Books";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { addBook, deleteBook, updateBook } from "../Books/reducer";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -19,22 +20,41 @@ export default function Home() {
     reviews_locked: false,
     author_id: currentUser ? currentUser._id : "123",
   };
-  const { books } = useSelector((state: any) => state.booksReducer);
   const [book, setBook] = useState<any>(defaultBook);
+  const [books, setBooks] = useState<any[]>([]);
+  const fetchBooks = async () => {
+    try {
+      const books = await bookClient.fetchAllBooks();
+      setBooks(books);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchBooks();
+  }, []);
+  const addBook = async () => {
+    const newBook = await bookClient.createBook(book);
+    setBooks([...books, newBook]);
+  };
+  const deleteBook = async (bookId: string) => {
+    const status = await bookClient.deleteBook(bookId);
+    setBooks(books.filter((book: any) => book._id !== bookId));
+  };
 
   return (
     <Container id="wd-home" className="my-4">
       <div id="wd-home-books">
-        <p>This is the Final Project for CS5610 by Zixuan Xiao and Yichen Zhang.</p>
+        <p>
+          This is the Final Project for CS5610 by Zixuan Xiao and Yichen Zhang.
+        </p>
         <Books
           books={books}
           book={book}
           setBook={setBook}
-          addNewBook={() => {
-            dispatch(addBook(book));
-          }}
+          addNewBook={addBook}
           deleteBook={(bookId: string) => {
-            dispatch(deleteBook(bookId));
+            deleteBook(bookId);
           }}
           updateBook={() => {
             dispatch(updateBook(book));
