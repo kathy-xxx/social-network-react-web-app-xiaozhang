@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <Container id="wd-home" className="my-4">
       <div id="wd-home-books">
-        {/* Pass the books to the Books component */}
+        <p>This is the Final Project for CS5610 by Zixuan Xiao and Yichen Zhang.</p>
         <Books
           books={books}
           book={book}

@@ -1,3 +1,4 @@
+import * as accountClient from "./Account/client";
 import {
   Navbar,
   Nav,
@@ -23,7 +24,8 @@ export default function Navigation() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const signout = () => {
+  const signout = async () => {
+    await accountClient.signout();
     dispatch(setCurrentUser(null));
     navigate("/home");
   };

@@ -1,3 +1,4 @@
+import * as client from "./client";
 import { Container, Card, Form, Button } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,21 +9,12 @@ import { addUser } from "./Users/reducer";
 export default function Signup() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const defaultUser = {
-    _id: "123",
-    username: "username",
-    password: "password",
-    firstName: "First Name",
-    lastName: "Last Name",
-    email: "email@email.com",
-    bio: "New bio.",
-    role: "USER",
-  };
-  const [user, setUser] = useState<any>(defaultUser);
-  const signup = () => {
-    dispatch(addUser(user));
-    dispatch(setCurrentUser(user));
-    navigate("/home");
+  const [user, setUser] = useState<any>({});
+  const signup = async () => {
+    const currentUser = await client.signup(user);
+    dispatch(addUser(currentUser));
+    dispatch(setCurrentUser(currentUser));
+    navigate("/profile");
   };
 
   return (
@@ -50,10 +42,6 @@ export default function Signup() {
                 onChange={(e) => setUser({ ...user, password: e.target.value })}
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="signupVerifyPassword">
-              <Form.Label>Verify Password</Form.Label>
-              <Form.Control type="password" placeholder="Confirm password" />
-            </Form.Group>
             <Form.Group className="mb-3" controlId="signupRole">
               <Form.Label>Sign Up As</Form.Label>
               <div>
@@ -79,12 +67,7 @@ export default function Signup() {
                 />
               </div>
             </Form.Group>
-            <Button
-              variant="primary"
-              type="submit"
-              className="w-100"
-              onClick={signup}
-            >
+            <Button variant="primary" className="w-100" onClick={signup}>
               Sign Up
             </Button>
           </Form>

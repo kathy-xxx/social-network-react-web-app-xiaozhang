@@ -1,3 +1,4 @@
+import * as client from "./client";
 import {
   Container,
   Row,
@@ -11,7 +12,6 @@ import {
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { updateUser } from "./Users/reducer";
 import { addFollow, deleteFollow } from "./Follows/reducer";
 import { setCurrentUser } from "../Account/reducer";
 
@@ -22,23 +22,24 @@ export default function Profile() {
   const [profile, setProfile] = useState<any>({});
   const { books } = useSelector((state: any) => state.booksReducer);
   const { reviews } = useSelector((state: any) => state.reviewsReducer);
-  const { users } = useSelector((state: any) => state.usersReducer);
   const { follows } = useSelector((state: any) => state.followsReducer);
   const { favorites } = useSelector((state: any) => state.favoritesReducer);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const effectiveUid = uid ? uid : currentUser?._id;
   const isSelf = !uid || (currentUser && currentUser._id === effectiveUid);
-  const user = users.find((u: any) => u._id === effectiveUid);
-  const fetchProfile = () => {
-    setProfile(user);
+  const fetchProfile = async () => {
+    if (isSelf) {
+      const user = await client.profile(); // calls /api/users/profile
+      setProfile(user);
+    } else {
+      const user = await client.findUserById(effectiveUid);
+      setProfile(user);
+    }
   };
   useEffect(() => {
     fetchProfile();
   }, []);
   if (!effectiveUid) {
-    return <div>User not found.</div>;
-  }
-  if (!user) {
     return <div>User not found.</div>;
   }
   const isFollowing = () => {
@@ -57,7 +58,8 @@ export default function Profile() {
   const userReviews: any[] = reviews.filter(
     (review: any) => review.user_id === effectiveUid
   );
-  const signout = () => {
+  const signout = async () => {
+    await client.signout();
     dispatch(setCurrentUser(null));
     navigate("/home");
   };
@@ -78,6 +80,10 @@ export default function Profile() {
     if (followId) {
       dispatch(deleteFollow(followId));
     }
+  };
+  const updateProfile = async () => {
+    const updatedProfile = await client.updateUser(profile);
+    dispatch(setCurrentUser(updatedProfile));
   };
 
   return (
@@ -143,23 +149,20 @@ export default function Profile() {
                 </Form>
                 <div className="mt-3 d-flex justify-content-between">
                   <Link
-                    to={`/following/${user._id}`}
+                    to={`/following/${profile._id}`}
                     className="btn btn-outline-primary"
                   >
                     Following
                   </Link>
                   <Link
-                    to={`/followers/${user._id}`}
+                    to={`/followers/${profile._id}`}
                     className="btn btn-outline-primary"
                   >
                     Followers
                   </Link>
                 </div>
                 <div className="mt-3 justify-content-between">
-                  <Button
-                    className="w-100"
-                    onClick={() => dispatch(updateUser(profile))}
-                  >
+                  <Button className="w-100" onClick={updateProfile}>
                     Save
                   </Button>
                 </div>
@@ -181,16 +184,16 @@ export default function Profile() {
               <Card.Body>
                 <ListGroup variant="flush">
                   <ListGroupItem>
-                    <strong>Username:</strong> {user.username}
+                    <strong>Username:</strong> {profile.username}
                   </ListGroupItem>
                   <ListGroupItem>
-                    <strong>Bio:</strong> {user.bio}
+                    <strong>Bio:</strong> {profile.bio}
                   </ListGroupItem>
                   <ListGroupItem>
-                    <strong>First Name:</strong> {user.firstName}
+                    <strong>First Name:</strong> {profile.firstName}
                   </ListGroupItem>
                   <ListGroupItem>
-                    <strong>Last Name:</strong> {user.lastName}
+                    <strong>Last Name:</strong> {profile.lastName}
                   </ListGroupItem>
                 </ListGroup>
                 <div className="mt-3">
@@ -205,13 +208,13 @@ export default function Profile() {
                 </div>
                 <div className="mt-3 d-flex justify-content-between">
                   <Link
-                    to={`/following/${user._id}`}
+                    to={`/following/${profile._id}`}
                     className="btn btn-outline-primary"
                   >
                     Following
                   </Link>
                   <Link
-                    to={`/followers/${user._id}`}
+                    to={`/followers/${profile._id}`}
                     className="btn btn-outline-primary"
                   >
                     Followers

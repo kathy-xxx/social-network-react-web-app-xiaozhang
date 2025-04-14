@@ -1,20 +1,16 @@
+import * as client from "./client";
 import { Container, Card, Form, Button } from "react-bootstrap";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { setCurrentUser } from "./reducer";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 export default function Signin() {
   const [credentials, setCredentials] = useState<any>({});
-  const users = useSelector((state: any) => state.usersReducer.users);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const signin = () => {
-    const user = users.find(
-      (u: any) =>
-        u.username === credentials.username &&
-        u.password === credentials.password
-    );
+  const signin = async () => {
+    const user = await client.signin(credentials);
     if (!user) return;
     dispatch(setCurrentUser(user));
     navigate("/profile");
