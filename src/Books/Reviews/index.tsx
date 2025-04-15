@@ -71,7 +71,7 @@ export default function Reviews({
                 />
               </Form.Group>
               <Button
-                variant="primary"
+                variant="outline-primary"
                 onClick={(e) => {
                   e.preventDefault();
                   addNewReview();
@@ -80,7 +80,7 @@ export default function Reviews({
                 Add
               </Button>
               <Button
-                variant="warning"
+                variant="outline-warning"
                 onClick={(e) => {
                   e.preventDefault();
                   updateReview();
@@ -118,7 +118,7 @@ export default function Reviews({
               {currentUser && (isAdmin() || isReviewWriter(review)) && (
                 <>
                   <Button
-                    variant="warning"
+                    variant="outline-warning"
                     onClick={(e) => {
                       e.preventDefault();
                       setReview(review);
@@ -128,7 +128,7 @@ export default function Reviews({
                     Edit
                   </Button>
                   <Button
-                    variant="danger"
+                    variant="outline-danger"
                     onClick={(e) => {
                       e.preventDefault();
                       deleteReview(review._id);

@@ -19,6 +19,10 @@ export const updateUser = async (user: any) => {
     const response = await axiosWithCredentials.put(`${USERS_API}/${user._id}`, user);
     return response.data;
 };
+export const deleteUser = async (userId: string) => {
+    const response = await axios.delete( `${USERS_API}/${userId}` );
+    return response.data;
+};  
 export const signout = async () => {
     const response = await axiosWithCredentials.post(`${USERS_API}/signout`);
     return response.data;
@@ -31,33 +35,41 @@ export const findUserById = async (userId: string) => {
     const response = await axiosWithCredentials.get(`${USERS_API}/${userId}`);
     return response.data;
 };
+export const findUsersByRole = async (role: string) => {
+    const response = await axiosWithCredentials.get(`${USERS_API}?role=${role}`);
+    return response.data;
+};
+export const findUsersByPartialName = async (name: string) => {
+    const response = await axios.get(`${USERS_API}?name=${name}`);
+    return response.data;
+};  
 export const findFavorites = async () => {
     const response = await axiosWithCredentials.get(`${USERS_API}/favorites`);
     return response.data;
-}
+};
 export const favorite = async (bookId: string) => {
     const response = await axiosWithCredentials.post(`${USERS_API}/favorite/${bookId}`);
     return response.data;
-}
+};
 export const unfavorite = async (bookId: string) => {
     const response = await axiosWithCredentials.delete(`${USERS_API}/favorite/${bookId}`);
     return response.data;
-}
+};
 export const follow = async (followeeId: string) => {
     const response = await axiosWithCredentials.post(`${USERS_API}/follow/${followeeId}`);
     return response.data;
-}
+};
 export const unfollow = async (followeeId: string) => {
     const response = await axiosWithCredentials.delete(`${USERS_API}/follow/${followeeId}`);
     return response.data;
-}
+};
 export const findFollowersForUser = async (userId: string) => {
     const response = await axiosWithCredentials.get(`${USERS_API}/${userId}/followers`);
     return response.data;
-}
+};
 export const findFolloweesForUser = async (userId: string) => {
     const response = await axiosWithCredentials.get(`${USERS_API}/${userId}/followees`);
     return response.data;
-}
+};
   
   

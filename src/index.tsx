@@ -10,6 +10,7 @@ import Following from "./Account/Follows/Following";
 import Follower from "./Account/Follows/Follower";
 import ProtectedRoute from "./Account/ProtectedRoutes";
 import Session from "./Account/Session";
+import Users from "./Account/Users";
 
 export default function SocialNetwork() {
   return (
@@ -35,6 +36,22 @@ export default function SocialNetwork() {
           <Route path="/details/:bid" element={<Details />} />
           <Route path="/following/:uid" element={<Following />} />
           <Route path="/followers/:uid" element={<Follower />} />
+          <Route
+            path="/users"
+            element={
+              <ProtectedRoute>
+                <Users />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/users/:uid"
+            element={
+              <ProtectedRoute>
+                <Users />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
     </Session>

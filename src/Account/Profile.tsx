@@ -22,6 +22,7 @@ export default function Profile() {
   const navigate = useNavigate();
   const { uid } = useParams<{ uid?: string }>();
   const [profile, setProfile] = useState<any>({});
+  const [editing, setEditing] = useState(false);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const effectiveUid = uid ? uid : currentUser?._id;
   const isSelf = !uid || (currentUser && currentUser._id === effectiveUid);
@@ -104,6 +105,7 @@ export default function Profile() {
   const updateProfile = async () => {
     const updatedProfile = await client.updateUser(profile);
     dispatch(setCurrentUser(updatedProfile));
+    setEditing(false);
   };
 
   return (
@@ -115,58 +117,82 @@ export default function Profile() {
             <Card>
               <Card.Header as="h3">Profile</Card.Header>
               <Card.Body>
-                <Form>
-                  <Form.Label>Username</Form.Label>
-                  <Form.Control
-                    defaultValue={profile.username}
-                    id="wd-username"
-                    onChange={(e) =>
-                      setProfile({ ...profile, username: e.target.value })
-                    }
-                  />
-                  <Form.Label>Bio</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    defaultValue={profile.bio}
-                    id="wd-bio"
-                    onChange={(e) =>
-                      setProfile({ ...profile, bio: e.target.value })
-                    }
-                  />
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    defaultValue={profile.password}
-                    id="wd-password"
-                    onChange={(e) =>
-                      setProfile({ ...profile, password: e.target.value })
-                    }
-                  />
-                  <Form.Label>First Name</Form.Label>
-                  <Form.Control
-                    defaultValue={profile.firstName}
-                    id="wd-first-name"
-                    onChange={(e) =>
-                      setProfile({ ...profile, firstName: e.target.value })
-                    }
-                  />
-                  <Form.Label>Last Name</Form.Label>
-                  <Form.Control
-                    defaultValue={profile.lastName}
-                    id="wd-last-name"
-                    onChange={(e) =>
-                      setProfile({ ...profile, lastName: e.target.value })
-                    }
-                  />
-                  <Form.Label>Email</Form.Label>
-                  <Form.Control
-                    defaultValue={profile.email}
-                    id="wd-email"
-                    onChange={(e) =>
-                      setProfile({ ...profile, email: e.target.value })
-                    }
-                  />
-                </Form>
+                {!editing && (
+                  <ListGroup variant="flush">
+                    <ListGroupItem>
+                      <strong>Username:</strong> {profile.username}
+                    </ListGroupItem>
+                    <ListGroupItem>
+                      <strong>Password:</strong> {profile.password}
+                    </ListGroupItem>
+                    <ListGroupItem>
+                      <strong>Bio:</strong> {profile.bio}
+                    </ListGroupItem>
+                    <ListGroupItem>
+                      <strong>First Name:</strong> {profile.firstName}
+                    </ListGroupItem>
+                    <ListGroupItem>
+                      <strong>Last Name:</strong> {profile.lastName}
+                    </ListGroupItem>
+                    <ListGroupItem>
+                      <strong>Email:</strong> {profile.email}
+                    </ListGroupItem>
+                  </ListGroup>
+                )}
+                {editing && (
+                  <Form>
+                    <Form.Label>Username</Form.Label>
+                    <Form.Control
+                      defaultValue={profile.username}
+                      id="wd-username"
+                      onChange={(e) =>
+                        setProfile({ ...profile, username: e.target.value })
+                      }
+                    />
+                    <Form.Label>Bio</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      defaultValue={profile.bio}
+                      id="wd-bio"
+                      onChange={(e) =>
+                        setProfile({ ...profile, bio: e.target.value })
+                      }
+                    />
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
+                      defaultValue={profile.password}
+                      id="wd-password"
+                      onChange={(e) =>
+                        setProfile({ ...profile, password: e.target.value })
+                      }
+                    />
+                    <Form.Label>First Name</Form.Label>
+                    <Form.Control
+                      defaultValue={profile.firstName}
+                      id="wd-first-name"
+                      onChange={(e) =>
+                        setProfile({ ...profile, firstName: e.target.value })
+                      }
+                    />
+                    <Form.Label>Last Name</Form.Label>
+                    <Form.Control
+                      defaultValue={profile.lastName}
+                      id="wd-last-name"
+                      onChange={(e) =>
+                        setProfile({ ...profile, lastName: e.target.value })
+                      }
+                    />
+                    <Form.Label>Email</Form.Label>
+                    <Form.Control
+                      defaultValue={profile.email}
+                      id="wd-email"
+                      onChange={(e) =>
+                        setProfile({ ...profile, email: e.target.value })
+                      }
+                    />
+                  </Form>
+                )}
                 <div className="mt-3 d-flex justify-content-between">
                   <Link
                     to={`/following/${profile._id}`}
@@ -182,9 +208,24 @@ export default function Profile() {
                   </Link>
                 </div>
                 <div className="mt-3 justify-content-between">
-                  <Button className="w-100" onClick={updateProfile}>
-                    Save
-                  </Button>
+                  {!editing && (
+                    <Button
+                      variant="outline-secondary"
+                      className="w-100"
+                      onClick={() => setEditing(true)}
+                    >
+                      Edit
+                    </Button>
+                  )}
+                  {editing && (
+                    <Button
+                      variant="outline-primary"
+                      className="w-100"
+                      onClick={updateProfile}
+                    >
+                      Save
+                    </Button>
+                  )}
                 </div>
                 <div className="mt-3 justify-content-between">
                   <Link
@@ -219,23 +260,25 @@ export default function Profile() {
                 <div className="mt-3">
                   {currentUser &&
                     (isFollowing() ? (
-                      <Button variant="danger" onClick={unfollow}>
+                      <Button variant="outline-danger" onClick={unfollow}>
                         Unfollow
                       </Button>
                     ) : (
-                      <Button onClick={follow}>Follow</Button>
+                      <Button variant="outline-primary" onClick={follow}>
+                        Follow
+                      </Button>
                     ))}
                 </div>
                 <div className="mt-3 d-flex justify-content-between">
                   <Link
                     to={`/following/${profile._id}`}
-                    className="btn btn-outline-primary"
+                    className="btn btn-outline-secondary"
                   >
                     Following
                   </Link>
                   <Link
                     to={`/followers/${profile._id}`}
-                    className="btn btn-outline-primary"
+                    className="btn btn-outline-secondary"
                   >
                     Followers
                   </Link>

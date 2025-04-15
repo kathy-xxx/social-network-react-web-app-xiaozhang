@@ -162,19 +162,19 @@ export default function Details() {
           <div className="mt-3">
             {currentUser &&
               (isFavorite() ? (
-                <Button variant="danger" onClick={unfavorite}>
+                <Button variant="outline-danger" onClick={unfavorite}>
                   Unfavorite
                 </Button>
               ) : (
-                <Button onClick={favorite}>Favorite</Button>
+                <Button variant="outline-primary" onClick={favorite}>Favorite</Button>
               ))}
           </div>
           <div className="mt-3">
             {isAuthor() &&
               (reviewsLocked() ? (
-                <Button onClick={unlockReviews}>Unlock Reviews</Button>
+                <Button variant="outline-dark" onClick={unlockReviews}>Unlock Reviews</Button>
               ) : (
-                <Button variant="danger" onClick={lockReviews}>
+                <Button variant="outline-danger" onClick={lockReviews}>
                   Lock Reviews
                 </Button>
               ))}

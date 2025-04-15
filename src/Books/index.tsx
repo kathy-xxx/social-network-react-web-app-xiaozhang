@@ -81,7 +81,7 @@ export default function Books({
                 />
               </Form.Group>
               <Button
-                variant="primary"
+                variant="outline-primary"
                 onClick={(e) => {
                   e.preventDefault();
                   addNewBook();
@@ -91,7 +91,7 @@ export default function Books({
                 Add
               </Button>
               <Button
-                variant="warning"
+                variant="outline-warning"
                 onClick={(e) => {
                   e.preventDefault();
                   updateBook();
@@ -198,14 +198,14 @@ export default function Books({
                         {currentUser && (isAdmin() || isBookAuthor(book)) && (
                           <>
                             <Button
-                              variant="warning"
+                              variant="outline-warning"
                               onClick={() => setBook(book)}
                               id="wd-edit-book-click"
                             >
                               Edit
                             </Button>
                             <Button
-                              variant="danger"
+                              variant="outline-danger"
                               onClick={() => deleteBook(book._id)}
                               id="wd-delete-book-click"
                             >
@@ -253,14 +253,14 @@ export default function Books({
                     {currentUser && (isAdmin() || isBookAuthor(book)) && (
                       <>
                         <Button
-                          variant="warning"
+                          variant="outline-warning"
                           onClick={() => setBook(book)}
                           id="wd-edit-book-click"
                         >
                           Edit
                         </Button>
                         <Button
-                          variant="danger"
+                          variant="outline-danger"
                           onClick={() => deleteBook(book._id)}
                           id="wd-delete-book-click"
                         >

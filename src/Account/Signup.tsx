@@ -9,7 +9,7 @@ import { addUser } from "./Users/reducer";
 export default function Signup() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [user, setUser] = useState<any>({});
+  const [user, setUser] = useState<any>({ role: "USER" });
   const signup = async () => {
     const currentUser = await client.signup(user);
     dispatch(addUser(currentUser));

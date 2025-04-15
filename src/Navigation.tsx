@@ -34,11 +34,14 @@ export default function Navigation() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const signout = async () => {
     await accountClient.signout();
     dispatch(setCurrentUser(null));
     navigate("/home");
+  };
+  const isAdmin = () => {
+    if (!currentUser) return false;
+    return currentUser.role === "ADMIN";
   };
 
   return (
@@ -57,6 +60,11 @@ export default function Navigation() {
             {currentUser && (
               <Nav.Link as={Link} to="/profile">
                 Profile
+              </Nav.Link>
+            )}
+            {currentUser && isAdmin() && (
+              <Nav.Link as={Link} to="/users">
+                Users
               </Nav.Link>
             )}
           </Nav>
