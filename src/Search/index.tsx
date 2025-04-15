@@ -51,7 +51,7 @@ export default function Search() {
                   </p>
                 </Card.Text>
                 <Link to={`/details/${book._id}`}>
-                  <Button variant="primary">View</Button>
+                  <Button variant="outline-secondary">View</Button>
                 </Link>
               </Card.Body>
             </Card>

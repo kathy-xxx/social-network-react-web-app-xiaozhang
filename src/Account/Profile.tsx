@@ -268,7 +268,7 @@ export default function Profile() {
                               <p className="wd-book-summary">{book.summary}</p>
                             </Card.Text>
                             <Link to={`/details/${book._id}`}>
-                              <Button variant="primary">View</Button>
+                              <Button variant="outline-secondary">View</Button>
                             </Link>
                           </Card.Body>
                         </Card>
@@ -289,6 +289,9 @@ export default function Profile() {
                       <ListGroupItem key={review._id} className="mb-2">
                         <h5>{review.title}</h5>
                         <p className="wd-review-content">{review.content}</p>
+                        <Link to={`/details/${review.book_id}`}>
+                          <Button variant="outline-secondary">View</Button>
+                        </Link>
                       </ListGroupItem>
                     ))}
                   </ListGroup>
