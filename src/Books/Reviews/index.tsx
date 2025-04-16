@@ -9,6 +9,8 @@ import {
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import * as userClient from "../../Account/client";
 
 export default function Reviews({
   reviews,
@@ -25,7 +27,18 @@ export default function Reviews({
   deleteReview: (reviewId: string) => void;
   updateReview: () => void;
 }) {
-  const { users } = useSelector((state: any) => state.usersReducer);
+  const [users, setUsers] = useState<any[]>([]);
+  const fetchUsers = async () => {
+    try {
+      const fetchedUsers = await userClient.fetchAllUsers();
+      setUsers(fetchedUsers);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchUsers();
+  }, []);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const isAdmin = () => currentUser.role === "ADMIN";
   const isReviewWriter = (review: any) => review.user_id === currentUser._id;
@@ -114,6 +127,7 @@ export default function Reviews({
                 <strong>Rating: </strong>
                 {review.rating}
               </p>
+              <p className="wd-review-date">Review Date: {new Date(review.review_date).toISOString().split("T")[0]}</p>
               <p className="wd-review-content">{review.content}</p>
               {currentUser && (isAdmin() || isReviewWriter(review)) && (
                 <>

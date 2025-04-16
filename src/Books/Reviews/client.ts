@@ -27,3 +27,7 @@ export const findReviewsForUser = async (userId: string) => {
     const { data } = await axiosWithCredentials.get(`${REVIEWS_API}/users/${userId}`);
     return data;
 }
+export const findWriterForReview = async (reviewId: string) => {
+    const { data } = await axiosWithCredentials.get(`${REVIEWS_API}/${reviewId}/writer`);
+    return data;
+}

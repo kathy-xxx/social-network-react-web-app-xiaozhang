@@ -7,7 +7,6 @@ export default function Users() {
   const [users, setUsers] = useState<any[]>([]);
   const [role, setRole] = useState<string>("");
   const [name, setName] = useState<string>("");
-
   const fetchUsers = async () => {
     try {
       const fetchedUsers = await userClient.fetchAllUsers();
@@ -16,11 +15,9 @@ export default function Users() {
       console.error(error);
     }
   };
-
   useEffect(() => {
     fetchUsers();
   }, []);
-
   const filterUsersByRole = async (role: string) => {
     setRole(role);
     if (role) {
@@ -30,7 +27,6 @@ export default function Users() {
       fetchUsers();
     }
   };
-
   const filterUsersByName = async (name: string) => {
     setName(name);
     if (name) {

@@ -1,8 +1,9 @@
 import { Container } from "react-bootstrap";
 import Books from "../Books";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as bookClient from "../Books/client";
+import { setBooks } from "../Books/reducer";
 
 export default function Home() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
@@ -19,11 +20,12 @@ export default function Home() {
     author_id: currentUser ? currentUser._id : "123",
   };
   const [book, setBook] = useState<any>(defaultBook);
-  const [books, setBooks] = useState<any[]>([]);
+  const { books } = useSelector((state: any) => state.booksReducer);
+  const dispatch = useDispatch();
   const fetchBooks = async () => {
     try {
       const books = await bookClient.fetchAllBooks();
-      setBooks(books);
+      dispatch(setBooks(books));
     } catch (error) {
       console.error(error);
     }
@@ -37,18 +39,20 @@ export default function Home() {
   };
   const deleteBook = async (bookId: string) => {
     await bookClient.deleteBook(bookId);
-    setBooks(books.filter((book: any) => book._id !== bookId));
+    dispatch(setBooks(books.filter((book: any) => book._id !== bookId)));
   };
   const updateBook = async () => {
     await bookClient.updateBook(book);
-    setBooks(
-      books.map((b) => {
-        if (b._id === book._id) {
-          return book;
-        } else {
-          return b;
-        }
-      })
+    dispatch(
+      setBooks(
+        books.map((b) => {
+          if (b._id === book._id) {
+            return book;
+          } else {
+            return b;
+          }
+        })
+      )
     );
     setBook(defaultBook);
   };

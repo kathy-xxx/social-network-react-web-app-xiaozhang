@@ -1,13 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { books } from "../Database";
 import { v4 as uuidv4 } from "uuid";
 const initialState = {
-  books: books,
+  books: [],
 };
 const booksSlice = createSlice({
   name: "books",
   initialState,
   reducers: {
+    setBooks: (state, action) => {
+      state.books = action.payload;
+    }, 
     addBook: (state, { payload: book }) => {
       const newBook: any = {
         _id: uuidv4(),
@@ -32,5 +34,5 @@ const booksSlice = createSlice({
     },
   },
 });
-export const { addBook, deleteBook, updateBook } = booksSlice.actions;
+export const { addBook, deleteBook, updateBook, setBooks } = booksSlice.actions;
 export default booksSlice.reducer;

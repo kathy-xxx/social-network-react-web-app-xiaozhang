@@ -2,7 +2,8 @@ import { Container, Row, Col, Image, Button } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import Reviews from "../Reviews";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setReviews } from "../Reviews/reducer";
 import * as reviewClient from "../Reviews/client";
 import * as bookClient from "../client";
 import * as userClient from "../../Account/client";
@@ -37,7 +38,8 @@ export default function Details() {
   useEffect(() => {
     fetchFavorites();
   }, []);
-  const [reviews, setReviews] = useState<any[]>([]);
+  const { reviews } = useSelector((state: any) => state.reviewsReducer);
+  const dispatch = useDispatch();
   const defaultReview = {
     _id: "0",
     rating: "5",
@@ -51,7 +53,7 @@ export default function Details() {
   const fetchReviews = async () => {
     try {
       const reviews = await reviewClient.findReviewsForBook(book._id);
-      setReviews(reviews);
+      dispatch(setReviews(reviews));
     } catch (error) {
       console.error(error);
     }
@@ -63,22 +65,26 @@ export default function Details() {
   }, [book]);
   const addReview = async () => {
     const newReview = await reviewClient.createReview(review);
-    setReviews([...reviews, newReview]);
+    dispatch(setReviews([...reviews, newReview]));
   };
   const deleteReview = async (reviewId: string) => {
     await reviewClient.deleteReview(reviewId);
-    setReviews(reviews.filter((review: any) => review._id !== reviewId));
+    dispatch(
+      setReviews(reviews.filter((review: any) => review._id !== reviewId))
+    );
   };
   const updateReview = async () => {
     await reviewClient.updateReview(review);
-    setReviews(
-      reviews.map((r) => {
-        if (r._id === review._id) {
-          return review;
-        } else {
-          return r;
-        }
-      })
+    dispatch(
+      setReviews(
+        reviews.map((r) => {
+          if (r._id === review._id) {
+            return review;
+          } else {
+            return r;
+          }
+        })
+      )
     );
     setReview(defaultReview);
   };
@@ -157,7 +163,8 @@ export default function Details() {
             <strong>Average Rating:</strong> {book.average_rating}
           </p>
           <p>
-            <strong>Publication Date:</strong> {book.publication_date}
+            <strong>Publication Date:</strong>
+            {new Date(book.publication_date).toISOString().split("T")[0]}
           </p>
           <div className="mt-3">
             {currentUser &&
@@ -166,13 +173,17 @@ export default function Details() {
                   Unfavorite
                 </Button>
               ) : (
-                <Button variant="outline-primary" onClick={favorite}>Favorite</Button>
+                <Button variant="outline-primary" onClick={favorite}>
+                  Favorite
+                </Button>
               ))}
           </div>
           <div className="mt-3">
             {isAuthor() &&
               (reviewsLocked() ? (
-                <Button variant="outline-dark" onClick={unlockReviews}>Unlock Reviews</Button>
+                <Button variant="outline-dark" onClick={unlockReviews}>
+                  Unlock Reviews
+                </Button>
               ) : (
                 <Button variant="outline-danger" onClick={lockReviews}>
                   Lock Reviews

@@ -1,13 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { reviews } from "../../Database";
 import { v4 as uuidv4 } from "uuid";
 const initialState = {
-  reviews: reviews
+  reviews: [],
 };
 const reviewsSlice = createSlice({
   name: "reviews",
   initialState,
   reducers: {
+    setReviews: (state, action) => {
+        state.reviews = action.payload;
+    },
     addReview: (state, { payload: review }) => {
       const newReview: any = {
         _id: uuidv4(),
@@ -30,5 +32,5 @@ const reviewsSlice = createSlice({
     },
   },
 });
-export const { addReview, deleteReview, updateReview } = reviewsSlice.actions;
+export const { addReview, deleteReview, updateReview, setReviews } = reviewsSlice.actions;
 export default reviewsSlice.reducer;
