@@ -26,6 +26,7 @@ export default function Profile() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const effectiveUid = uid ? uid : currentUser?._id;
   const isSelf = !uid || (currentUser && currentUser._id === effectiveUid);
+  const [loading, setLoading] = useState(true);
   const fetchProfile = async () => {
     if (isSelf) {
       const user = await client.profile(); // calls /api/users/profile
@@ -35,9 +36,6 @@ export default function Profile() {
       setProfile(user);
     }
   };
-  useEffect(() => {
-    fetchProfile();
-  }, []);
   const [follows, setFollows] = useState<any[]>([]);
   const fetchFollows = async () => {
     try {
@@ -47,9 +45,6 @@ export default function Profile() {
       console.error(error);
     }
   };
-  useEffect(() => {
-    fetchFollows();
-  }, []);
   const [favoriteBooks, setFavoriteBooks] = useState<any[]>([]);
   const fetchFavoriteBooks = async () => {
     if (!profile) return;
@@ -60,9 +55,6 @@ export default function Profile() {
       console.error(error);
     }
   };
-  useEffect(() => {
-    fetchFavoriteBooks();
-  }, [profile]);
   const [userReviews, setUserReviews] = useState<any[]>([]);
   const fetchUserReviews = async () => {
     if (!profile) return;
@@ -74,8 +66,27 @@ export default function Profile() {
     }
   };
   useEffect(() => {
-    fetchUserReviews();
-  }, [profile]);
+    async function loadEverything() {
+      const fetchedProfile = isSelf
+        ? await client.profile()
+        : await client.findUserById(effectiveUid!);
+      setProfile(fetchedProfile);
+      const fetchedFollows = await followClient.fetchAllFollows();
+      setFollows(fetchedFollows);
+      const fetchedFavs = await bookClient.findFavoriteBooksForUser(
+        fetchedProfile._id
+      );
+      setFavoriteBooks(fetchedFavs);
+      const fetchedRevs = await reviewClient.findReviewsForUser(
+        fetchedProfile._id
+      );
+      setUserReviews(fetchedRevs);
+      setLoading(false);
+    }
+    if (effectiveUid) {
+      loadEverything();
+    }
+  }, [effectiveUid, isSelf]);
   if (!effectiveUid) {
     return <div>User not found.</div>;
   }
