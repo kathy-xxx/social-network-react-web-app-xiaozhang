@@ -61,14 +61,14 @@ export default function Home() {
     <Container id="wd-home" className="my-4">
       <div id="wd-home-books">
         <p>
-          This is the Final Project for CS5610 by Zixuan Xiao and Yichen Zhang.
-          Project GitHub repository:&nbsp;
+          This is the Final Project by Group ZX (01 - Grad, group member: Zixuan
+          Xiao and Yichen Zhang). Project GitHub repository:&nbsp;
           <a href="https://github.com/kathy-xxx/social-network-react-web-app-xiaozhang.git">
-            front end
+            front end React.js
           </a>
           ,&nbsp;
           <a href="https://github.com/kathy-xxx/social-network-node-server-app-xiaozhang.git">
-            back end
+            back end Node.js
           </a>
           .
         </p>
