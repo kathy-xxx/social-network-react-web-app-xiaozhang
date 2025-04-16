@@ -3,6 +3,8 @@ import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import * as bookClient from "./client";
+import * as favoriteClient from "../Account/Favorites/client";
+import * as userClient from "../Account/client";
 
 export default function Books({
   books,
@@ -49,7 +51,36 @@ export default function Books({
   useEffect(() => {
     fetchFavoriteBooks();
   }, [currentUser]);
+  const [favorites, setFavorites] = useState<any[]>([]);
+  const fetchFavorites = async () => {
+    try {
+      const favorites = await favoriteClient.fetchAllFavorites();
+      setFavorites(favorites);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchFavorites();
+  }, []);
   const [showAll, setShowAll] = useState<boolean>(false);
+  const isFavorite = (bookId: string) => {
+    if (!currentUser) return false;
+    return favorites.some(
+      (f: any) => f.book_id === bookId && f.user_id === currentUser._id
+    );
+  };
+  const favorite = async (bookId: string) => {
+    if (!currentUser) return false;
+    const newFavorite = await userClient.favorite(bookId);
+    setFavorites([...favorites, newFavorite]);
+  };
+  const unfavorite = async (bookId: string) => {
+    await userClient.unfavorite(bookId);
+    setFavorites(
+      favorites.filter((favorite: any) => favorite.book_id !== bookId)
+    );
+  };
   return (
     <div id="wd-home-books" style={{ paddingTop: "20px" }}>
       <h1>Book Reviews Hub</h1>
@@ -138,23 +169,20 @@ export default function Books({
                         <Link to={`/details/${book._id}`}>
                           <Button variant="outline-secondary">View</Button>
                         </Link>
-                        {currentUser && (isAdmin() || isBookAuthor(book)) && (
-                          <>
-                            <Button
-                              variant="warning"
-                              onClick={() => setBook(book)}
-                              id="wd-edit-book-click"
-                            >
-                              Edit
-                            </Button>
-                            <Button
-                              variant="danger"
-                              onClick={() => deleteBook(book._id)}
-                              id="wd-delete-book-click"
-                            >
-                              Delete
-                            </Button>
-                          </>
+                        {isFavorite(book._id) ? (
+                          <Button
+                            variant="outline-danger"
+                            onClick={() => unfavorite(book._id)}
+                          >
+                            Unfavorite
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="outline-primary"
+                            onClick={() => favorite(book._id)}
+                          >
+                            Favorite
+                          </Button>
                         )}
                       </Card.Body>
                     </Card>
@@ -195,23 +223,20 @@ export default function Books({
                         <Link to={`/details/${book._id}`}>
                           <Button variant="outline-secondary">View</Button>
                         </Link>
-                        {currentUser && (isAdmin() || isBookAuthor(book)) && (
-                          <>
-                            <Button
-                              variant="outline-warning"
-                              onClick={() => setBook(book)}
-                              id="wd-edit-book-click"
-                            >
-                              Edit
-                            </Button>
-                            <Button
-                              variant="outline-danger"
-                              onClick={() => deleteBook(book._id)}
-                              id="wd-delete-book-click"
-                            >
-                              Delete
-                            </Button>
-                          </>
+                        {isFavorite(book._id) ? (
+                          <Button
+                            variant="outline-danger"
+                            onClick={() => unfavorite(book._id)}
+                          >
+                            Unfavorite
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="outline-primary"
+                            onClick={() => favorite(book._id)}
+                          >
+                            Favorite
+                          </Button>
                         )}
                       </Card.Body>
                     </Card>
