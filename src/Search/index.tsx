@@ -53,10 +53,10 @@ export default function Search() {
                   <Card.Text>
                     {book.summary}
                     <br />
-                    <strong>Avg. Rating:</strong> {book.average_rating}
+                    <strong>Average Rating:</strong> {book.average_rating}
                   </Card.Text>
                   <Link to={`/details/${book._id}`}>
-                    <Button>View Details</Button>
+                    <Button variant="outline-secondary">View Details</Button>
                   </Link>
                 </Card.Body>
               </Card>

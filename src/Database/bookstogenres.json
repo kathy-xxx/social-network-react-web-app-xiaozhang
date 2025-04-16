@@ -48,6 +48,21 @@
       "_id": "10",
       "book_id": "5",
       "genre_id": "1"
+    },
+    {
+      "_id": "11",
+      "book_id": "6",
+      "genre_id": "6"
+    },
+    {
+      "_id": "12",
+      "book_id": "7",
+      "genre_id": "2"
+    },
+    {
+      "_id": "13",
+      "book_id": "8",
+      "genre_id": "8"
     }
   ]
   

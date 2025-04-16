@@ -53,6 +53,39 @@
       "average_rating": "4.5",
       "reviews_locked": "false",
       "author_id": "132"
+    },
+    {
+      "_id": "6",
+      "title": "The Hound of the Baskervilles",
+      "isbn": "9780140437865",
+      "summary": "Sherlock Holmes and Dr. Watson investigate the legend of a supernatural hound stalking the English moors.",
+      "publication_date": "1902-04-01",
+      "cover_image_url": "https://m.media-amazon.com/images/I/61XJB9c5PBL._SY522_.jpg",
+      "average_rating": "4.2",
+      "reviews_locked": "false",
+      "author_id": "200"
+    },
+    {
+      "_id": "7",
+      "title": "Dune",
+      "isbn": "9780441172719",
+      "summary": "On the desert planet Arrakis, young Paul Atreides must navigate political intrigue and cosmic destiny to become a legend.",
+      "publication_date": "1965-08-01",
+      "cover_image_url": "https://m.media-amazon.com/images/I/41uBViwic5L._SY445_SX342_.jpg",
+      "average_rating": "4.6",
+      "reviews_locked": "false",
+      "author_id": "201"
+    },
+    {
+      "_id": "8",
+      "title": "Dracula",
+      "isbn": "9780141439846",
+      "summary": "Jonathan Harker's journey to Transylvania uncovers Count Dracula’s dark designs on England—and a fight for survival begins.",
+      "publication_date": "1897-05-26",
+      "cover_image_url": "https://m.media-amazon.com/images/I/41-gWiZ5CUL._SY445_SX342_.jpg",
+      "average_rating": "4.3",
+      "reviews_locked": "false",
+      "author_id": "202"
     }
   ]
   

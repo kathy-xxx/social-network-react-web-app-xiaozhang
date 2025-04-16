@@ -108,6 +108,36 @@
       "email": "margaret@mitchell.com",
       "bio": "Author of Gone with the Wind, a classic American novel.",
       "role": "AUTHOR"
+    },
+    {
+      "_id": "200",
+      "username": "arthur_c_doyle",
+      "password": "sherlock123",
+      "firstName": "Arthur Conan",
+      "lastName": "Doyle",
+      "email": "arthur@doyle.com",
+      "bio": "Creator of Sherlock Holmes and master of mystery.",
+      "role": "AUTHOR"
+    },
+    {
+      "_id": "201",
+      "username": "frank_herbert",
+      "password": "arrakis",
+      "firstName": "Frank",
+      "lastName": "Herbert",
+      "email": "frank@herbert.com",
+      "bio": "Visionary science fiction author of Dune.",
+      "role": "AUTHOR"
+    },
+    {
+      "_id": "202",
+      "username": "bram_stoker",
+      "password": "dracula",
+      "firstName": "Bram",
+      "lastName": "Stoker",
+      "email": "bram@stoker.com",
+      "bio": "Irish author best known for Dracula, the classic horror novel.",
+      "role": "AUTHOR"
     }
   ]
   
