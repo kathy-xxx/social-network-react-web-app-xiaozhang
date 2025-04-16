@@ -27,44 +27,9 @@ export default function Profile() {
   const effectiveUid = uid ? uid : currentUser?._id;
   const isSelf = !uid || (currentUser && currentUser._id === effectiveUid);
   const [loading, setLoading] = useState(true);
-  const fetchProfile = async () => {
-    if (isSelf) {
-      const user = await client.profile(); // calls /api/users/profile
-      setProfile(user);
-    } else {
-      const user = await client.findUserById(effectiveUid);
-      setProfile(user);
-    }
-  };
   const [follows, setFollows] = useState<any[]>([]);
-  const fetchFollows = async () => {
-    try {
-      const follows = await followClient.fetchAllFollows();
-      setFollows(follows);
-    } catch (error) {
-      console.error(error);
-    }
-  };
   const [favoriteBooks, setFavoriteBooks] = useState<any[]>([]);
-  const fetchFavoriteBooks = async () => {
-    if (!profile) return;
-    try {
-      const books = await bookClient.findFavoriteBooksForUser(profile._id);
-      setFavoriteBooks(books);
-    } catch (error) {
-      console.error(error);
-    }
-  };
   const [userReviews, setUserReviews] = useState<any[]>([]);
-  const fetchUserReviews = async () => {
-    if (!profile) return;
-    try {
-      const reviews = await reviewClient.findReviewsForUser(profile._id);
-      setUserReviews(reviews);
-    } catch (error) {
-      console.error(error);
-    }
-  };
   useEffect(() => {
     async function loadEverything() {
       const fetchedProfile = isSelf
@@ -87,7 +52,7 @@ export default function Profile() {
       loadEverything();
     }
   }, [effectiveUid, isSelf]);
-  if (!effectiveUid) {
+  if (!effectiveUid && !loading) {
     return <div>User not found.</div>;
   }
   const isFollowing = () => {
