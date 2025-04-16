@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as bookClient from "../Books/client";
 import { setBooks } from "../Books/reducer";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
@@ -62,6 +63,15 @@ export default function Home() {
       <div id="wd-home-books">
         <p>
           This is the Final Project for CS5610 by Zixuan Xiao and Yichen Zhang.
+          Project GitHub repository:&nbsp;
+          <a href="https://github.com/kathy-xxx/social-network-react-web-app-xiaozhang.git">
+            front end
+          </a>
+          ,&nbsp;
+          <a href="https://github.com/kathy-xxx/social-network-node-server-app-xiaozhang.git">
+            back end
+          </a>
+          .
         </p>
         <Books
           books={books}

@@ -99,6 +99,15 @@ export default function Books({
                   onChange={(e) => setBook({ ...book, title: e.target.value })}
                 />
               </Form.Group>
+              <Form.Group controlId="bookTitle" className="mb-3">
+                <Form.Label>Cover Image</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter cover image url"
+                  value={book.cover_image_url}
+                  onChange={(e) => setBook({ ...book, cover_image_url: e.target.value })}
+                />
+              </Form.Group>
               <Form.Group controlId="bookSummary" className="mb-3">
                 <Form.Label>Summary</Form.Label>
                 <Form.Control
