@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as bookClient from "../Books/client";
 import { setBooks } from "../Books/reducer";
-import { Link } from "react-router-dom";
 
 export default function Home() {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
