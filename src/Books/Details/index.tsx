@@ -12,7 +12,6 @@ import * as favoriteClient from "../../Account/Favorites/client";
 export default function Details() {
   const { bid } = useParams<{ bid: string }>();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  // Use the new book data and find the specific book by its _id
   const [book, setBook] = useState<any>();
   const fetchBook = async () => {
     if (!bid) return;
@@ -77,7 +76,7 @@ export default function Details() {
     await reviewClient.updateReview(review);
     dispatch(
       setReviews(
-        reviews.map((r) => {
+        reviews.map((r: any) => {
           if (r._id === review._id) {
             return review;
           } else {

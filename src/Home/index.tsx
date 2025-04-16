@@ -45,7 +45,7 @@ export default function Home() {
     await bookClient.updateBook(book);
     dispatch(
       setBooks(
-        books.map((b) => {
+        books.map((b: any) => {
           if (b._id === book._id) {
             return book;
           } else {
