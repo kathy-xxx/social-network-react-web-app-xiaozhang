@@ -73,7 +73,3 @@ Across roles:
 
 - **Frontend:** React, React Router, Redux Toolkit, React-Bootstrap
 - **Backend:** Node.js, Express, MongoDB, Mongoose
-
-## 📄 License
-
-MIT © Your Name
