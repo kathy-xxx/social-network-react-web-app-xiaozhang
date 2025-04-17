@@ -11,7 +11,7 @@ A full-stack web application for discovering, reviewing, and discussing books.
 
 Below is the core data model illustrating entities and their relationships:
 
-![Data Model Diagram](./data-model.png)
+![Data Model Diagram](./data_model.png)
 
 ## 👥 User Roles & Sample Accounts
 
