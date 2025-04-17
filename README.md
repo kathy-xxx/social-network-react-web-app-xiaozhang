@@ -1,54 +1,79 @@
-# React + TypeScript + Vite
+# Book Reviews Hub
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack web application for discovering, reviewing, and discussing books.
 
-Currently, two official plugins are available:
+## Live Demo & Backend
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Frontend: [https://social-network-react-web-app-xiaozhan.netlify.app](https://social-network-react-web-app-xiaozhan.netlify.app)
+- Backend API: [https://social-network-node-server-app-xiaozhang.onrender.com](https://social-network-node-server-app-xiaozhang.onrender.com)
 
-## Expanding the ESLint configuration
+## 📊 Data Model
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Below is the core data model illustrating entities and their relationships:
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+![Data Model Diagram](./data-model.png)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 👥 User Roles & Sample Accounts
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Three user types enable different capabilities:
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+| Role   | Username        | Password         |
+| ------ | --------------- | ---------------- |
+| Reader | `jane_doe`      | `jane123`        |
+| Author | `jane_austen`   | `prideprejudice` |
+| Admin  | `charlie_admin` | `charlieadmin`   |
+
+Anyone can also **register a new account**.
+
+## ✨ Key Features
+
+- **Anonymous:** Browse home, view book details.
+- **Reader:** Favorite books, follow users, write/edit reviews, view favorites.
+- **Author:** All reader features, plus add/edit own books, lock/unlock reviews.
+- **Admin:** All author features, plus view/manage all users, change roles, edit any book.
+
+Across roles:
+
+- User authentication (signup/signin/signout)
+- Profile view & edit
+- Follow/unfollow users
+- Favorite/unfavorite books
+- Search by genre & title, with pagination state retained
+
+## 🚀 Getting Started
+
+1. **Clone** the repo:
+
+   ```bash
+   git clone https://github.com/kathy-xxx/social-network-react-web-app-xiaozhang.git
+   cd social-network-react-web-app-xiaozhang
+   ```
+
+2. **Install Dependencies** (frontend & backend):
+
+   ```bash
+   npm install
+   ```
+
+3. **Configure**
+
+   - Create a `.env` in `/backend` with your MongoDB URI and port.
+   - Create a `.env` in `/frontend` with `VITE_REMOTE_SERVER` pointing to backend URL.
+
+4. **Run**
+
+   - Backend: `node index.js`
+   - Frontend: `npm run dev`
+
+5. **Visit**
+   - Frontend: `http://localhost:5173`
+   - Backend: `http://localhost:4000`
+
+## 🛠 Tech Stack
+
+- **Frontend:** React, React Router, Redux Toolkit, React-Bootstrap
+- **Backend:** Node.js, Express, MongoDB, Mongoose
+
+## 📄 License
+
+MIT © Your Name
