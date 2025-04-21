@@ -61,7 +61,7 @@ export default function Home() {
     <Container id="wd-home" className="my-4">
       <div id="wd-home-books">
         <p>
-          This is the Final Project by Group ZX (01 - Grad, group member: Zixuan
+          This is the Final Project by Group XZ (01 - Grad, group member: Zixuan
           Xiao and Yichen Zhang). Project GitHub repository:&nbsp;
           <a href="https://github.com/kathy-xxx/social-network-react-web-app-xiaozhang.git">
             front end React.js
